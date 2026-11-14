@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard Aldervane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/main-CL8Mv7vx.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/shared-BhyKLrjU.js">
+    <link rel="stylesheet" crossorigin href="./assets/shared-FCsielAh.css">
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Leaderboard Aldervane</h1>
+      <p class="sub">Peringkat para pahlawan terbaik. Cari UID-mu dan lihat posisimu.</p>
+    </header>
+
+    <main class="container">
+      <section class="search card">
+        <label for="uid-input">Cari rank kamu</label>
+        <form id="search-form" autocomplete="off">
+          <input id="uid-input" type="text" placeholder="Masukkan UID kamu..." />
+          <button type="submit">Cari</button>
+        </form>
+        <div id="search-result" aria-live="polite"></div>
+      </section>
+
+      <nav class="tabs" role="tablist" id="tabs"></nav>
+
+      <section class="card">
+        <div id="tab-info" class="tab-info"></div>
+        <ol id="board" class="board"></ol>
+      </section>
+
+      <p id="updated" class="updated"></p>
+    </main>
+
+  </body>
+</html>
