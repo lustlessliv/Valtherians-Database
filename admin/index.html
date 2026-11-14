@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Dashboard Admin Aldervane</title>
+    <title>Dashboard Triune Aldervane</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -16,16 +16,17 @@
   </head>
   <body>
     <nav class="site-nav" aria-label="Navigasi utama">
-      <a class="brand" href="https://lustlessliv.github.io/VLA-Arx-Divina/"><img src="../logo.svg" alt="" /><span>Valthera</span></a>
+      <a class="brand" href="../"><img src="../logo.svg" alt="" /><span>Valthera</span></a>
       <div class="nav-links">
         <a href="../">Leaderboard</a>
-        <a class="active" href="./" aria-current="page">Admin</a>
+        <a href="../database/">Database</a>
+              <a class="active" href="./" aria-current="page">Triune</a>
       </div>
     </nav>
 
     <header class="hero small">
-      <h1>Dashboard Admin</h1>
-      <p class="sub">Kelola pemain dan poin leaderboard Aldervane</p>
+      <h1>Dashboard Triune</h1>
+      <p class="sub">Kelola Valtherians dan poin leaderboard Aldervane</p>
     </header>
 
     <main class="container wide">
@@ -55,7 +56,7 @@
         <section class="card">
           <h2>Tambah / kurangi poin cepat</h2>
           <form id="adjust-form" class="inline">
-            <input id="a-uid" placeholder="UID pemain" required />
+            <input id="a-uid" placeholder="UID Valtherian" required />
             <input id="a-delta" type="number" step="1" placeholder="Jumlah poin, mis. 150 atau -50" required />
             <button class="btn primary" type="submit">Terapkan</button>
           </form>
@@ -63,11 +64,11 @@
 
         <section class="card">
           <div class="toolbar">
-            <h2>Pemain</h2>
+            <h2>Valtherians</h2>
             <span class="spacer"></span>
             <input id="search" type="search" placeholder="Cari UID atau nama..." />
             <select id="rank-filter" aria-label="Filter rank"></select>
-            <button id="add-btn" class="btn primary" type="button">+ Tambah pemain</button>
+            <button id="add-btn" class="btn primary" type="button">+ Tambah Valtherian</button>
           </div>
           <div class="table-wrap">
             <table>
@@ -109,7 +110,7 @@
 
     <dialog id="edit-dialog">
       <form id="edit-form" class="stack">
-        <h2 id="dialog-title">Pemain</h2>
+        <h2 id="dialog-title">Valtherians</h2>
         <label>UID <input id="f-uid" required /></label>
         <label>Nama <input id="f-name" required /></label>
         <label>Poin <input id="f-score" type="number" min="0" step="1" required /></label>
