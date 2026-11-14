@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Logo">
+  <!-- Logo sementara. Ganti file ini dengan logomu (pakai nama logo.svg),
+       atau ganti src="logo.svg" di index.html dan admin/index.html kalau pakai PNG. -->
+  <circle cx="60" cy="60" r="55" fill="#0f1a3a" stroke="#d9b84a" stroke-width="3"/>
+  <circle cx="60" cy="60" r="47" fill="none" stroke="#d9b84a" stroke-width="1" opacity=".45"/>
+  <polygon points="33,34 48,34 60,68 72,34 87,34 67,90 53,90" fill="#d9b84a"/>
+</svg>
