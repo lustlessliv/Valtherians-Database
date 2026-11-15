@@ -1,3 +1,5 @@
+// Dashboard Triune: kelola member (leaderboard), Triune (staff), impor CSV, riwayat.
+// Kode redeem ada di admin-codes.js.
 import "./layout.js";
 import { RANKS, configured, el, fmt, parseCsv, rankFor, sb } from "./lib.js";
 import { LABELS, STAFF_ROLES } from "./config.js";
@@ -5,17 +7,17 @@ import { ASPIRANT, staffSort, staffTag } from "./api.js";
 
 const $ = (q) => document.querySelector(q);
 
-const PAGE_SIZE = 50;      
+const PAGE_SIZE = 50;      // jumlah baris member per halaman tabel
 const MAX_TITLE = 60;
-const MAX_ACH = 20;        
+const MAX_ACH = 20;        // maks. insignia per orang
 
 let players = [];
 let staff = [];
-let staffReady = true;     
+let staffReady = true;     // false kalau tabel staff belum dibuat (supabase-staff.sql belum dijalankan)
 let rankFilter = "all";
 let search = "";
-let page = 1;              
-let editingUid = null;     
+let page = 1;              // halaman tabel member yang sedang dibuka
+let editingUid = null;     // null = tambah member baru
 let staffFilter = "all";
 let staffSearch = "";
 let editingStaffUid = null;
@@ -64,16 +66,18 @@ function button(text, cls, onClick) {
 /* ---------------------------------------------------------- data */
 
 async function fetchAllPlayers() {
+  const base = "uid,name,score,joined_at,title,achievements,updated_at";
+  let cols = base + ",is_test"; // is_test ada setelah supabase-register.sql dijalankan
   const rows = [];
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await sb
-      .from("players")
-      .select("uid,name,score,joined_at,title,achievements,updated_at")
-      .order("uid")
-      .range(from, from + 999);
-    if (error) throw error;
-    rows.push(...data);
-    if (data.length < 1000) break;
+    let res = await sb.from("players").select(cols).order("uid").range(from, from + 999);
+    if (res.error && cols !== base) {
+      cols = base; // SQL tahap 2 belum dijalankan: pakai kolom lama
+      res = await sb.from("players").select(cols).order("uid").range(from, from + 999);
+    }
+    if (res.error) throw res.error;
+    rows.push(...res.data);
+    if (res.data.length < 1000) break;
   }
   return rows;
 }
@@ -115,10 +119,11 @@ function renderStats() {
     s.append(v, el("div", "stat-label", label));
     box.append(s);
   };
-  tile("Total Valtherians", players.length + staff.length);
-  for (const r of RANKS) tile(r.short, players.filter((p) => rankFor(p.score)?.id === r.id).length, r.color);
-  tile(ASPIRANT.short, players.filter((p) => !rankFor(p.score)).length, ASPIRANT.color);
-  tile("Triune (staff)", staff.length, "var(--gold)");
+  const real = players.filter((p) => !p.is_test); // data uji coba tidak dihitung
+  tile("Total Valtherians", real.length + staff.length);
+  for (const r of RANKS) tile(r.short, real.filter((p) => rankFor(p.score)?.id === r.id).length, r.color);
+  tile(ASPIRANT.short, real.filter((p) => !rankFor(p.score)).length, ASPIRANT.color);
+  tile("Triune", staff.length, "var(--gold)");
 }
 
 /* ---------------------------------------------------------- tabel member */
@@ -155,9 +160,11 @@ function renderPlayers() {
     act.append(button("Edit", "btn small", () => openMemberDialog(p)), button("Hapus", "btn small danger", () => removeMember(p)));
     const rankTd = el("td");
     rankTd.append(rankBadge(p.score));
+    const nameTd = el("td", "", p.name);
+    if (p.is_test) nameTd.append(" ", el("span", "chip test", "uji coba"));
     tr.append(
       el("td", "mono", p.uid),
-      el("td", "", p.name),
+      nameTd,
       rankTd,
       el("td", "num", fmt.format(p.score)),
       insigniaCell(p.achievements),
@@ -218,7 +225,7 @@ $("#edit-form").addEventListener("submit", async (ev) => {
   const name = $("#f-name").value.trim();
   const score = parseInt($("#f-score").value, 10);
   if (!uid || !name || !Number.isInteger(score) || score < 0) return toast("Data tidak valid.", true);
-  if (editingUid === null && staffUids().has(uid)) return toast(`${LABELS.id} ini terdaftar sebagai staff, tidak bisa masuk leaderboard.`, true);
+  if (editingUid === null && staffUids().has(uid)) return toast(`${LABELS.id} ini terdaftar sebagai Triune, tidak bisa masuk leaderboard.`, true);
 
   const ach = cleanList($("#f-ach").value.split("\n"));
   if (ach.length > MAX_ACH) return toast(`Maksimal ${MAX_ACH} insignia.`, true);
@@ -257,7 +264,7 @@ $("#adjust-form").addEventListener("submit", async (ev) => {
   const uid = $("#a-uid").value.trim();
   const delta = parseInt($("#a-delta").value, 10);
   if (!uid || !Number.isInteger(delta)) return toast(`Isi ${LABELS.id} dan jumlah ${LABELS.points} (boleh negatif).`, true);
-  if (staffUids().has(uid)) return toast(`${LABELS.id} ini staff, tidak punya ${LABELS.points}.`, true);
+  if (staffUids().has(uid)) return toast(`${LABELS.id} ini Triune, tidak punya ${LABELS.points}.`, true);
   const { data, error } = await sb.rpc("adjust_score", { p_uid: uid, p_delta: delta });
   if (error) return toast(error.message, true);
   if (data === null) return toast(`${LABELS.id} tidak ditemukan.`, true);
@@ -279,7 +286,7 @@ function renderStaff() {
 
   if (!staffReady) {
     const tr = el("tr");
-    const td = el("td", "empty", "Tabel staff belum ada. Jalankan supabase-staff.sql di Supabase (lihat README).");
+    const td = el("td", "empty", "Tabel Triune belum ada. Jalankan supabase-staff.sql di Supabase (lihat README).");
     td.colSpan = 6;
     tr.append(td);
     body.append(tr);
@@ -295,7 +302,7 @@ function renderStaff() {
 
   if (!rows.length) {
     const tr = el("tr");
-    const td = el("td", "empty", "Belum ada staff.");
+    const td = el("td", "empty", "Belum ada Triune.");
     td.colSpan = 6;
     tr.append(td);
     body.append(tr);
@@ -311,7 +318,7 @@ function renderStaff() {
     tr.append(el("td", "mono", s.uid), el("td", "", s.name), tag, status, el("td", "", fmtDate(s.joined_at)), act);
     body.append(tr);
   }
-  note.textContent = `${fmt.format(rows.length)} staff`;
+  note.textContent = `${fmt.format(rows.length)} Triune`;
 }
 
 function syncDivisionField() {
@@ -323,7 +330,7 @@ function syncDivisionField() {
 
 function openStaffDialog(s) {
   editingStaffUid = s ? s.uid : null;
-  $("#staff-dialog-title").textContent = s ? "Edit staff" : "Tambah staff";
+  $("#staff-dialog-title").textContent = s ? "Edit Triune" : "Tambah Triune";
   $("#s-uid").value = s?.uid ?? "";
   $("#s-uid").readOnly = !!s;
   $("#s-name").value = s?.name ?? "";
@@ -369,47 +376,61 @@ $("#staff-form").addEventListener("submit", async (ev) => {
     const asMember = players.find((p) => p.uid === uid);
     if (asMember && !confirm(
       `${LABELS.id} ${uid} (${asMember.name}) masih terdaftar sebagai member dengan ${fmt.format(asMember.score)} ${LABELS.points}.\n\n` +
-      "Kalau dijadikan staff, datanya dihapus dari leaderboard (tercatat di riwayat perubahan). Lanjutkan?"
+      "Kalau dijadikan Triune, datanya dihapus dari leaderboard (tercatat di riwayat perubahan). Lanjutkan?"
     )) return;
     q = sb.from("staff").insert({ uid, ...row });
   } else {
     q = sb.from("staff").update(row).eq("uid", editingStaffUid);
   }
   const { error } = await q;
-  if (error) return toast(error.code === "23505" ? `${LABELS.id} sudah terdaftar sebagai staff.` : error.message, true);
+  if (error) return toast(error.code === "23505" ? `${LABELS.id} sudah terdaftar sebagai Triune.` : error.message, true);
 
   $("#staff-dialog").close();
-  toast("Staff tersimpan.");
+  toast("Triune tersimpan.");
   await loadAll();
 });
 
 async function removeStaff(s) {
-  if (!confirm(`Hapus ${s.name} (${s.uid}) dari staff?\n\n${LABELS.id} ini bisa ditambahkan ke leaderboard lagi setelahnya. Kalau hanya berhenti menjabat, ubah Status jadi Deactive.`)) return;
+  if (!confirm(`Hapus ${s.name} (${s.uid}) dari Triune?\n\n${LABELS.id} ini bisa ditambahkan ke leaderboard lagi setelahnya. Kalau hanya berhenti menjabat, ubah Status jadi Deactive.`)) return;
   const { error } = await sb.from("staff").delete().eq("uid", s.uid);
   if (error) return toast(error.message, true);
-  toast("Staff dihapus.");
+  toast("Triune dihapus.");
   await loadAll();
 }
 
 /* ---------------------------------------------------------- riwayat */
 
 async function loadLog() {
-  const { data, error } = await sb.from("score_log").select("*").order("id", { ascending: false }).limit(30);
+  const [sc, rn] = await Promise.all([
+    sb.from("score_log").select("*").order("id", { ascending: false }).limit(30),
+    sb.from("rename_log").select("*").order("id", { ascending: false }).limit(30),
+  ]);
   const list = $("#log");
   list.replaceChildren();
-  if (error || !data.length) {
-    list.append(el("li", "empty", error ? "Gagal memuat riwayat." : "Belum ada riwayat."));
+  if (sc.error) {
+    list.append(el("li", "empty", "Gagal memuat riwayat."));
     return;
   }
   const verb = { create: "Ditambahkan", update: "Diubah", delete: "Dihapus" };
-  for (const r of data) {
-    const when = new Date(r.created_at).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" });
+  const entries = sc.data.map((r) => {
     const change =
       r.action === "create" ? `→ ${fmt.format(r.new_score)}`
       : r.action === "delete" ? `(${fmt.format(r.old_score)})`
       : `${fmt.format(r.old_score)} → ${fmt.format(r.new_score)}`;
+    return { at: r.created_at, text: `${verb[r.action]}: ${r.name} (${r.uid}) ${change}` };
+  });
+  // Ganti nama (kosong kalau SQL tahap 2 belum dijalankan)
+  for (const r of rn.data || []) entries.push({ at: r.created_at, text: `Ganti nama: ${r.old_name} → ${r.new_name} (${r.uid})` });
+
+  entries.sort((x, y) => new Date(y.at) - new Date(x.at));
+  if (!entries.length) {
+    list.append(el("li", "empty", "Belum ada riwayat."));
+    return;
+  }
+  for (const e of entries.slice(0, 30)) {
+    const when = new Date(e.at).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" });
     const li = el("li", "log-row");
-    li.append(el("span", "log-time", when), el("span", "log-text", `${verb[r.action]}: ${r.name} (${r.uid}) ${change}`));
+    li.append(el("span", "log-time", when), el("span", "log-text", e.text));
     list.append(li);
   }
 }
@@ -475,7 +496,7 @@ $("#import-btn").addEventListener("click", async () => {
   rows = rows.filter((r) => !blocked.has(r.uid));
   if (!rows.length) return toast("Tidak ada baris valid untuk diimpor.", true);
 
-  const skipNote = skipped.length ? `\n${fmt.format(skipped.length)} baris dilewati karena ${LABELS.id}-nya staff.` : "";
+  const skipNote = skipped.length ? `\n${fmt.format(skipped.length)} baris dilewati karena ${LABELS.id}-nya Triune.` : "";
   if (!confirm(`Impor ${fmt.format(rows.length)} Valtherians? ${LABELS.id} yang sudah ada akan ditimpa.${skipNote}`)) return;
 
   for (let i = 0; i < rows.length; i += 500) {
@@ -484,7 +505,7 @@ $("#import-btn").addEventListener("click", async () => {
   }
   $("#import-text").value = "";
   $("#import-file").value = "";
-  toast(`${fmt.format(rows.length)} Valtherians diimpor.` + (skipped.length ? ` ${fmt.format(skipped.length)} staff dilewati.` : ""));
+  toast(`${fmt.format(rows.length)} Valtherians diimpor.` + (skipped.length ? ` ${fmt.format(skipped.length)} Triune dilewati.` : ""));
   await loadAll();
 });
 
