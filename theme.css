@@ -1,0 +1,111 @@
+/* ==========================================================
+   Tema Valthera (navy + emas), menimpa CSS bawaan leaderboard.
+   Dimuat SETELAH stylesheet lain, jadi cukup edit warna di sini.
+   ========================================================== */
+
+:root {
+  --bg: #060a16;
+  --panel: #0f1a3a;
+  --panel-2: #14224a;
+  --border: #1f3066;
+  --text: #d3d9ea;
+  --muted: #8e99b8;
+  --gold: #d9b84a;
+  --gold-deep: #8f7527;
+  --nav: #0d1840;
+}
+
+body { background: var(--bg); }
+a { color: inherit; }
+
+/* ---------- Navbar ---------- */
+.site-nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 4px 12px; padding: 8px 16px;
+  background: var(--nav); border-bottom: 1px solid var(--border);
+}
+.site-nav .brand {
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  font-family: Cinzel, serif; font-weight: 700; font-size: .9rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--gold);
+}
+.site-nav .brand img { width: 24px; height: 24px; display: block; }
+.nav-links { display: flex; flex-wrap: wrap; gap: 2px; }
+.nav-links a {
+  text-decoration: none; font-size: .82rem; color: #b8c2dc;
+  padding: 7px 10px; border-radius: 4px;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-links a.active { color: var(--gold); background: #3a331f; }
+
+/* ---------- Hero ---------- */
+.hero { padding: 24px 16px 8px; }
+.hero-card {
+  --bw: clamp(44px, 12vw, 90px);
+  position: relative; max-width: 760px; margin: 0 auto;
+  padding: 26px calc(var(--bw) + 20px);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, #1a2b63 0%, #0f1a3d 55%, #0b1330 100%);
+}
+.hero-card .banner { position: absolute; top: 14px; width: var(--bw); height: auto; }
+.hero-card .banner.left { left: 14px; }
+.hero-card .banner.right { right: 14px; }
+.hero-logo { display: block; margin: 0 auto 4px; width: clamp(64px, 18vw, 96px); height: auto; }
+.eyebrow {
+  margin: 10px 0 6px; font-size: .72rem; letter-spacing: .28em;
+  text-transform: uppercase; color: var(--muted);
+}
+.hero h1 { text-transform: uppercase; }
+.hero-card h1 { font-size: clamp(1.45rem, 5vw, 2.6rem); line-height: 1.15; }
+.motto {
+  margin: 10px 0 0; font-family: Cinzel, serif; color: var(--gold);
+  letter-spacing: .06em; text-transform: uppercase; font-size: clamp(.95rem, 3.4vw, 1.2rem);
+}
+.hero-card .sub { margin-top: 14px; color: var(--text); font-size: .92rem; }
+.hero.small { padding: 24px 16px 4px; }
+
+/* ---------- Kartu, input, tombol ---------- */
+.card, .stat, dialog { border-radius: 8px; }
+.result { border-radius: 8px; border: 1px solid var(--border); }
+.tab { border-radius: 6px; }
+input, select, textarea, #search-form input { border-radius: 6px; }
+
+.search label,
+.card h2 {
+  font-family: Cinzel, serif; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--gold);
+}
+.search label {
+  font-size: 1rem; padding-bottom: 8px; margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.card h2 { font-size: 1.05rem; }
+.tab-info h2 { font-size: 1.15rem; }
+dialog h2 { color: var(--gold); text-transform: uppercase; letter-spacing: .06em; }
+
+#search-form button, .link, .btn.primary {
+  background: var(--gold-deep); color: #140e02;
+  border: 1px solid #b5952f; border-radius: 6px;
+}
+#search-form button:hover, .link:hover, .btn.primary:hover { background: #a68a2e; }
+.btn { border-radius: 6px; }
+
+.score, .num { color: var(--gold); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  margin-top: 24px; padding: 26px 16px 22px; text-align: center;
+  background: var(--nav); border-top: 1px solid var(--border);
+}
+.footer-in { max-width: 760px; margin: 0 auto; }
+.site-footer .motto { margin: 0 0 8px; font-size: .95rem; }
+.site-footer p { margin: 0; font-size: .78rem; }
+.site-footer .credit {
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+  font-size: .7rem; letter-spacing: .08em; color: var(--muted);
+}
+.site-footer .credit b { color: var(--gold); }
+
+/* Link kecil di dalam teks hero */
+.inline-link { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
