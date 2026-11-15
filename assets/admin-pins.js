@@ -4,10 +4,8 @@ import { sb, el, fmt } from "./lib.js";
 import { LABELS } from "./config.js";
 
 const $ = (q) => document.querySelector(q);
-const SHOW_LIMIT = 200;
 
 let pins = [];
-let filter = "all";
 let tm;
 
 function toast(msg, isError = false) {
@@ -27,66 +25,110 @@ function showOutput(list) {
   $("#pin-output").rows = Math.min(10, Math.max(2, list.length));
 }
 
-function render() {
-  const body = $("#pins-body");
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("Tersalin.");
+  } catch {
+    toast("Gagal menyalin, salin manual.", true);
+  }
+}
+
+/* ---------- Ringkasan Emblem asli (per catatan). Emblem asli tidak pernah ditampilkan. ---------- */
+
+function renderSummary() {
+  const body = $("#pins-summary");
   body.replaceChildren();
-  const list = pins.filter((p) =>
-    filter === "free" ? !p.claimed_at
-    : filter === "used" ? !!p.claimed_at
-    : filter === "test" ? p.is_test
-    : true
-  );
-  const shown = list.slice(0, SHOW_LIMIT);
-  if (!shown.length) {
+  const groups = new Map();
+  for (const p of pins.filter((x) => !x.is_test)) {
+    const key = p.note || "";
+    const g = groups.get(key) || { note: p.note, total: 0, used: 0 };
+    g.total++;
+    if (p.claimed_at) g.used++;
+    groups.set(key, g);
+  }
+  if (!groups.size) {
     const tr = el("tr");
     const td = el("td", "empty", `Belum ada ${LABELS.pin}.`);
     td.colSpan = 5;
     tr.append(td);
     body.append(tr);
+    return;
   }
-  for (const p of shown) {
-    const tr = el("tr");
-    const note = el("td", "", p.note || "-");
-    if (p.is_test) note.append(" ", el("span", "chip test", "uji coba"));
-    const status = el("td", "", p.claimed_at ? "Terikat ID" : "Belum dipakai");
-    const del = el("button", "btn small danger", "Hapus");
-    del.type = "button";
-    del.addEventListener("click", () => remove(p));
+  for (const g of groups.values()) {
+    const free = g.total - g.used;
     const act = el("td", "actions");
-    act.append(del);
-    tr.append(note, status, el("td", "mono", p.uid || "-"), el("td", "", fmtDate(p.created_at)), act);
+    if (free > 0) {
+      const b = el("button", "btn small danger", "Hapus yang belum dipakai");
+      b.type = "button";
+      b.addEventListener("click", () => removeUnused(g, free));
+      act.append(b);
+    }
+    const tr = el("tr");
+    tr.append(
+      el("td", "", g.note || "(tanpa catatan)"),
+      el("td", "num", fmt.format(g.total)),
+      el("td", "num", fmt.format(g.used)),
+      el("td", "num", fmt.format(free)),
+      act
+    );
     body.append(tr);
   }
-  const free = pins.filter((p) => !p.claimed_at).length;
-  $("#pins-note").textContent = `${fmt.format(pins.length)} ${LABELS.pin} • ${fmt.format(free)} belum dipakai`;
+}
+
+async function removeUnused(g, free) {
+  if (!confirm(`Hapus ${fmt.format(free)} ${LABELS.pin} yang belum dipakai di "${g.note || "(tanpa catatan)"}"? ${LABELS.pin} itu tidak bisa dipakai mendaftar lagi. Yang sudah terpakai tidak tersentuh.`)) return;
+  let q = sb.from("member_pins").delete().is("claimed_at", null).eq("is_test", false);
+  q = g.note ? q.eq("note", g.note) : q.is("note", null);
+  const { error } = await q;
+  if (error) return toast(error.message, true);
+  toast(`${LABELS.pin} yang belum dipakai dihapus.`);
+  await load();
+}
+
+/* ---------- Daftar Emblem uji coba (ditampilkan lengkap) ---------- */
+
+function renderTests() {
+  const body = $("#pins-body");
+  body.replaceChildren();
+  const list = pins.filter((p) => p.is_test);
+  if (!list.length) {
+    const tr = el("tr");
+    const td = el("td", "empty", `Belum ada ${LABELS.pin} uji coba.`);
+    td.colSpan = 4;
+    tr.append(td);
+    body.append(tr);
+  }
+  for (const p of list) {
+    const code = el("td", "mono copyable", p.pin_plain || "(tidak tersimpan)");
+    code.title = "Klik untuk menyalin";
+    if (p.pin_plain) code.addEventListener("click", () => copyText(p.pin_plain));
+    const tr = el("tr");
+    tr.append(code, el("td", "", p.note || "-"), el("td", "", p.claimed_at ? "Terikat ID" : "Belum dipakai"), el("td", "mono", p.uid || "-"));
+    body.append(tr);
+  }
+  const free = list.filter((p) => !p.claimed_at).length;
+  $("#pins-note").textContent = `${fmt.format(list.length)} ${LABELS.pin} uji coba • ${fmt.format(free)} belum dipakai`;
+}
+
+function render() {
+  renderSummary();
+  renderTests();
 }
 
 async function load() {
-  const { data, error } = await sb
-    .from("member_pins")
-    .select("id,uid,note,is_test,created_at,claimed_at,last_rename_at")
-    .order("created_at", { ascending: false })
-    .limit(1000);
-  if (error) {
-    console.error(error);
+  const base = "id,uid,note,is_test,created_at,claimed_at,last_rename_at";
+  let res = await sb.from("member_pins").select(base + ",pin_plain").order("created_at", { ascending: false }).limit(1000);
+  if (res.error) res = await sb.from("member_pins").select(base).order("created_at", { ascending: false }).limit(1000); // pin_plain belum ada
+  if (res.error) {
+    console.error(res.error);
     pins = [];
-    $("#pins-body").replaceChildren();
-    $("#pins-note").textContent = `Daftar ${LABELS.pin} belum tersedia. Jalankan supabase-register.sql di Supabase (lihat README).`;
+    render();
+    $("#pins-note").textContent = `Data ${LABELS.pin} belum tersedia. Jalankan supabase-register.sql di Supabase (lihat README).`;
     return;
   }
-  pins = data;
+  pins = res.data;
   render();
-}
-
-async function remove(p) {
-  const msg = p.uid
-    ? `Hapus ${LABELS.pin} milik ID ${p.uid}? Member itu tidak bisa ganti nama lagi sampai dibuatkan ${LABELS.pin} baru.`
-    : `Hapus ${LABELS.pin} yang belum dipakai ini? ${LABELS.pin} itu tidak bisa dipakai mendaftar lagi.`;
-  if (!confirm(msg)) return;
-  const { error } = await sb.from("member_pins").delete().eq("id", p.id);
-  if (error) return toast(error.message, true);
-  toast(`${LABELS.pin} dihapus.`);
-  await load();
 }
 
 // Buat Emblem pendaftaran baru
@@ -120,17 +162,7 @@ $("#pin-bound-form").addEventListener("submit", async (ev) => {
   await load();
 });
 
-$("#pin-copy").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText($("#pin-output").value);
-    toast("Tersalin.");
-  } catch {
-    $("#pin-output").select();
-    toast("Pilih teks lalu salin manual.", true);
-  }
-});
-
-$("#pin-filter").addEventListener("change", (ev) => { filter = ev.target.value; render(); });
+$("#pin-copy").addEventListener("click", () => copyText($("#pin-output").value));
 
 $("#test-clean").addEventListener("click", async () => {
   if (!confirm("Hapus SEMUA data uji coba (member TEST..., Emblem uji coba, dan riwayatnya)? Data asli tidak tersentuh.")) return;
