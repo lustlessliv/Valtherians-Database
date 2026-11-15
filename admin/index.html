@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <script type="module" crossorigin src="../assets/admin-CDl1Vk5-.js"></script>
+    <script type="module" crossorigin src="../assets/admin-codes.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/shared-BhyKLrjU.js">
     <link rel="stylesheet" crossorigin href="../assets/shared-FCsielAh.css">
     <link rel="stylesheet" crossorigin href="../assets/admin-DD2leoxZ.css">
@@ -18,9 +19,10 @@
     <nav class="site-nav" aria-label="Navigasi utama">
       <a class="brand" href="../"><img src="../logo.svg" alt="" /><span>Valthera</span></a>
       <div class="nav-links">
-        <a href="../">Leaderboard</a>
         <a href="../database/">Database</a>
-              <a class="active" href="./" aria-current="page">Triune</a>
+        <a href="../">Leaderboard</a>
+        <a href="../redeem/">Redeem</a>
+        <a class="active" aria-current="page" href="./">Triune</a>
       </div>
     </nav>
 
@@ -91,6 +93,40 @@
             <span class="spacer"></span>
             <button id="import-btn" class="btn primary" type="button">Impor</button>
           </div>
+        </section>
+
+        <section class="card" id="codes-card">
+          <h2>Kode redeem</h2>
+          <p class="muted small-text">Tiap kode hanya bisa dipakai satu kali dan menambah poin ke UID yang memakainya. Kosongkan kolom kode sendiri kalau mau dibuatkan acak.</p>
+          <form id="code-form" class="inline">
+            <input id="c-points" type="number" min="1" step="1" placeholder="Poin per kode" required />
+            <input id="c-qty" type="number" min="1" max="100" step="1" value="1" placeholder="Jumlah kode" required />
+            <input id="c-custom" maxlength="40" placeholder="Kode sendiri (opsional)" />
+            <input id="c-note" maxlength="80" placeholder="Catatan (opsional)" />
+            <button class="btn primary" type="submit">Buat kode</button>
+          </form>
+          <textarea id="c-output" rows="4" readonly hidden></textarea>
+          <div class="inline" id="c-output-actions" hidden>
+            <span class="muted small-text">Kode baru (salin sebelum ditutup):</span>
+            <span class="spacer"></span>
+            <button id="c-copy" class="btn small" type="button">Salin</button>
+          </div>
+          <div class="toolbar">
+            <h2>Daftar kode</h2>
+            <span class="spacer"></span>
+            <select id="c-filter" aria-label="Filter kode">
+              <option value="all">Semua</option>
+              <option value="free">Tersedia</option>
+              <option value="used">Terpakai</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Kode</th><th class="num">Poin</th><th>Catatan</th><th>Status</th><th></th></tr></thead>
+              <tbody id="codes-body"></tbody>
+            </table>
+          </div>
+          <p id="codes-note" class="muted small-text"></p>
         </section>
 
         <section class="card">
