@@ -94,7 +94,7 @@ export function statusCard(m) {
   card.append(top);
 
   if (isStaff) {
-    card.append(el("div", "status-next", "Staff Triune tidak masuk leaderboard dan tidak memiliki Sigil(s)."));
+    card.append(el("div", "status-next", "Staff Triune tidak masuk leaderboard dan tidak memiliki Sigil."));
     return card;
   }
 
@@ -120,7 +120,7 @@ export function statusCard(m) {
     bar.append(fill);
     card.append(bar, el("div", "status-next", `${fmt.format(next.min - m.score)} ${LABELS.points} lagi menuju ${next.name}`));
   } else {
-    card.append(el("div", "status-next", "Kamu sudah berada di rank tertinggi. 👑"));
+    card.append(el("div", "status-next", "Euge! Sudah berada di rank tertinggi."));
   }
   return card;
 }
