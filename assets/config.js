@@ -60,6 +60,10 @@ export const PAGES = {
     title: "Selamat Datang, Aspirant",
     sub: "Valthera Legion menyambutmu. Buat Legion ID-mu untuk memulai perjalanan menuju Imperial Knight.",
   },
+  repository: {
+    title: "Repository Member",
+    sub: "Ruang pribadi para Valtherian. Masuk dengan ID dan Emblem-mu.",
+  },
   admin: {
     title: "Dashboard Triune",
     sub: "Kelola catatan Valtherians, Triune, dan Sigil Valthera Legion Leaderboard",
@@ -94,7 +98,7 @@ export const WELCOME = {
     // { label: "Nama website", url: "https://...", desc: "Penjelasan singkat (opsional)" },
   ],
   repositoryLabel: "Cek Valtherian's Repository",
-  repositoryUrl: "", // isi saat halaman Repository sudah ada, mis. "repository/"
+  repositoryUrl: "repository/", // isi saat halaman Repository sudah ada, mis. "repository/"
   renameCooldownText: "Nama hanya bisa diganti sekali setiap 7 hari.",
 };
 
