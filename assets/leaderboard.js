@@ -1,4 +1,3 @@
-// Halaman utama: Cari ID  >  Leaderboard  >  Redeem code
 import "./layout.js";
 import { RANKS, TOP, configured, el, fmt, rangeText, rankFor, sb } from "./lib.js";
 import { LABELS, RANKUP } from "./config.js";
@@ -106,7 +105,6 @@ if (configured) {
 
 /* ---------------------------------------------------------- 3. Redeem code */
 
-// Ucapan selamat kalau rank naik (Aspirant dihitung sebagai "belum punya rank").
 function showRankUp(box, oldScore, newScore) {
   const before = rankFor(oldScore);
   const after = rankFor(newScore);
@@ -124,7 +122,7 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
   out.replaceChildren();
   const uid = $("#r-uid").value.trim();
   const code = $("#r-code").value.trim();
-  if (!uid || !code) return say(out, "error", `Isi ${LABELS.id} dan kode dulu.`);
+  if (!uid || !code) return say(out, "error", `Isi ${LABELS.id} dan kode terlebih dahulu.`);
   if (!configured) return say(out, "error", "Database belum dikonfigurasi (lihat README).");
 
   const buttons = document.querySelectorAll("#redeem-form button");
@@ -143,7 +141,7 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
       await showStatus(out, uid);
       load(); // segarkan leaderboard
     } else if (r?.status === "used") say(out, "error", "Kode ini sudah pernah dipakai.");
-    else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah staff dan tidak bisa menukar kode.`);
+    else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah Triune dan tidak bisa menukar kode.`);
     else if (r?.status === "no_player") say(out, "error", `${LABELS.id} "${uid}" tidak ditemukan.`);
     else say(out, "error", "Kode tidak valid.");
   }
