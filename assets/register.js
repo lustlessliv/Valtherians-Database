@@ -16,6 +16,31 @@ function say(box, kind, text) {
 for (const sel of ["#reg-pin", "#ren-pin"]) {
   $(sel).addEventListener("input", (ev) => { ev.target.value = ev.target.value.toUpperCase(); });
 }
+/* ---------------------------------------------------------- menu (tab) */
+
+const MODES = ["register", "resume", "rename"];
+let mode = null;
+
+function setMode(next) {
+  mode = next;
+  const tabs = $("#mode-tabs");
+  tabs.replaceChildren();
+  for (const m of MODES) {
+    const b = el("button", "tab" + (m === mode ? " active" : ""), TRAINING.tabs[m]);
+    b.type = "button";
+    b.role = "tab";
+    b.style.setProperty("--c", "var(--gold)");
+    b.addEventListener("click", () => setMode(m));
+    tabs.append(b);
+  }
+  for (const m of MODES) $(`#${m}-card`).hidden = m !== mode;
+  $("#mode-hint").textContent = mode ? "" : TRAINING.tabsHint;
+  // Hero hanya dipakai di layar awal dan Ganti nama
+  const hero = document.querySelector(".hero");
+  if (hero) hero.style.display = mode === "register" || mode === "resume" ? "none" : "";
+}
+setMode(null);
+
 $("#rename-sub").textContent = `Pakai ${LABELS.id} dan ${LABELS.pin}-mu. ${WELCOME.renameCooldownText}`;
 
 /* ---------------------------------------------------------- kartu sambutan */
@@ -41,26 +66,21 @@ function linkSection(title, links) {
   return box;
 }
 
+// Layar akhir: kartu sambutan + ID card + tautan. later = member menunda memilih jadwal.
 async function showDone(uid, name, later = false) {
   const done = $("#done");
   done.replaceChildren();
-  $("#resume-card").hidden = false;
-  $("#rename-card").hidden = false;
+  $("#mode-tabs").style.display = "";
+  setMode(null);
+  const hero = document.querySelector(".hero");
+  if (hero) hero.style.display = "none"; // hero tidak dibawa lagi setelah alur dimulai
 
-  const welcome = el("section", "card welcome");
+  const welcome = el("section", "card welcome highlight");
   welcome.append(
-    el("h2", "sec-title", WELCOME.doneTitle),
+    el("h2", "sec-title", TRAINING.doneTitle),
     el("p", "welcome-name", name),
-    el("div", "reg-id-label", `${LABELS.id} kamu`),
-    el("div", "reg-id", uid)
+    el("p", "sec-sub", WELCOME.doneText)
   );
-  const copy = el("button", "btn-gold small", `Salin ${LABELS.id}`);
-  copy.type = "button";
-  copy.addEventListener("click", async () => {
-    try { await navigator.clipboard.writeText(uid); copy.textContent = "Tersalin"; }
-    catch { copy.textContent = `${LABELS.id}: ${uid}`; }
-  });
-  welcome.append(copy, el("p", "sec-sub", WELCOME.doneText));
   if (later) welcome.append(el("p", "sec-sub", TRAINING.laterText));
   done.append(welcome);
 
@@ -87,11 +107,9 @@ async function showDone(uid, name, later = false) {
     done.append(card);
   }
 
-  $("#register-card").hidden = true;
   done.hidden = false;
   done.scrollIntoView({ behavior: "smooth" });
 }
-
 
 /* ---------------------------------------------------------- training */
 
@@ -99,10 +117,11 @@ const TR_MSG = {
   invalid: `${LABELS.id} atau ${LABELS.pin} tidak cocok.`,
   not_member: `${LABELS.id} tidak ditemukan.`,
   locked: "Terlalu banyak percobaan salah. Coba lagi beberapa menit lagi.",
-  already: "Arbiter sudah dipilih. Hanya Triune yang bisa mengubahnya.",
+  already: "Arbiter sudah dipilih sebelumnya. Hanya Triune yang bisa mengubahnya.",
   bad_arbiter: "Arbiter itu tidak tersedia.",
-  no_arbiter: "Pilih Arbiter dulu.",
-  no_session: "Sesi itu sudah tidak tersedia.",
+  no_session: "Ada sesi yang sudah tidak tersedia. Muat ulang jadwal lalu pilih lagi.",
+  need_both: "Kamu harus mengambil kedua jenis sesi.",
+  need_arbiter: "Minimal satu sesi harus dipandu Arbiter pilihanmu.",
 };
 
 function fmtWhen(iso) {
@@ -112,12 +131,14 @@ function fmtWhen(iso) {
   return `${day}, ${hm} WIB`;
 }
 
-// Alur Training setelah ID jadi: pilih Arbiter -> pilih sesi -> kartu sambutan.
+// Layar Training: kotak atas (sambutan + ID, dibuat lebih terang) dan kartu Arbiter + jadwal.
 async function startTraining(me) {
   const box = $("#done");
-  $("#register-card").hidden = true;
-  $("#resume-card").hidden = true;
-  $("#rename-card").hidden = true;
+  for (const m of MODES) $(`#${m}-card`).hidden = true;
+  $("#mode-tabs").style.display = "none";
+  $("#mode-hint").textContent = "";
+  const hero = document.querySelector(".hero");
+  if (hero) hero.style.display = "none";
   box.hidden = false;
 
   const [mine, arbs, sess] = await Promise.all([
@@ -128,13 +149,14 @@ async function startTraining(me) {
   const m = mine.data?.[0];
   if (mine.error || m?.status !== "ok") {
     box.replaceChildren(el("div", "notice error", TR_MSG[m?.status] || "Terjadi kesalahan, coba lagi nanti."));
-    $("#resume-card").hidden = false;
+    $("#mode-tabs").style.display = "";
+    setMode("resume");
     return;
   }
 
-  const head = el("section", "card welcome");
+  const head = el("section", "card welcome highlight");
   head.append(
-    el("h2", "sec-title", me.fresh ? "ID kamu sudah jadi" : "Lanjutkan Training"),
+    el("h2", "sec-title", me.fresh ? TRAINING.doneTitle : "Lanjutkan Training"),
     el("p", "welcome-name", me.name || ""),
     el("div", "reg-id-label", `${LABELS.id} kamu`),
     el("div", "reg-id", me.uid)
@@ -145,107 +167,102 @@ async function startTraining(me) {
     try { await navigator.clipboard.writeText(me.uid); copy.textContent = "Tersalin"; }
     catch { copy.textContent = `${LABELS.id}: ${me.uid}`; }
   });
-  head.append(copy, el("p", "sec-sub", TRAINING.intro));
+  head.append(copy, el("p", "sec-sub", WELCOME.doneText), el("p", "sec-sub", TRAINING.intro));
 
   const step = el("section", "card");
   box.replaceChildren(head, step);
   box.scrollIntoView({ behavior: "smooth" });
-
-  const finish = (later) => showDone(me.uid, me.name, later);
-
-  if (!m.arbiter_uid) return renderArbiter(step, me, arbs.data || [], finish);
-  renderSessions(step, me, m, sess.data || [], finish);
+  renderTraining(step, me, m, arbs.data || [], sess.data || []);
 }
 
-function renderArbiter(step, me, arbiters, finish) {
-  step.replaceChildren(el("h2", "sec-title", TRAINING.arbiterTitle), el("p", "sec-sub", TRAINING.arbiterText));
-  if (!arbiters.length) {
-    step.append(el("div", "notice error", TRAINING.arbiterEmpty));
-    const later = el("button", "btn-gold small", TRAINING.laterLabel);
-    later.type = "button";
-    later.addEventListener("click", () => finish(true));
-    step.append(later);
-    return;
-  }
-  let picked = null;
-  const list = el("div", "pick-list");
-  const submit = el("button", "btn-gold", "Ajukan sebagai Trainee");
-  submit.type = "button";
-  submit.disabled = true;
-  const out = el("div");
-  for (const a of arbiters) {
-    const b = el("button", "pick-item");
-    b.type = "button";
-    b.append(el("span", "pick-name", a.name), el("span", "pick-sub", `${LABELS.id}: ${a.uid}`));
-    b.addEventListener("click", () => {
-      picked = a.uid;
-      for (const x of list.children) x.classList.toggle("on", x === b);
-      submit.disabled = false;
-    });
-    list.append(b);
-  }
-  submit.addEventListener("click", async () => {
-    submit.disabled = true;
-    const { data, error } = await sb.rpc("choose_arbiter", { p_uid: me.uid, p_pin: me.pin, p_arbiter: picked });
-    if (error || data !== "ok") {
-      submit.disabled = false;
-      return say(out, "error", TR_MSG[data] || "Terjadi kesalahan, coba lagi nanti.");
-    }
-    startTraining({ ...me, fresh: me.fresh });
-  });
-  step.append(list, el("p", "muted small-text", TRAINING.arbiterWarn), submit, out);
-}
-
-function renderSessions(step, me, m, sessions, finish) {
+// Satu layar: pilih Arbiter + jadwal, lalu "Ajukan status Trainee".
+function renderTraining(step, me, m, arbiters, sessions) {
   const joined = new Set(m.session_ids || []);
-  const hasRequired = sessions.some((s) => joined.has(s.id) && s.trainer_uid === m.arbiter_uid);
-  step.replaceChildren(
-    el("h2", "sec-title", TRAINING.sessionsTitle),
-    el("p", "sec-sub", `Arbiter-mu: ${m.arbiter_name}. ${TRAINING.sessionsText}`),
-    el("p", "muted small-text", TRAINING.tip)
-  );
+  const chosen = new Set();      // sesi yang dipilih di layar ini (belum disimpan)
+  let arb = m.arbiter_uid || null;
   const out = el("div");
 
-  if (!sessions.length) step.append(el("div", "notice", TRAINING.noSessions));
-  for (const kind of Object.keys(TRAINING.kinds)) {
-    const rows = sessions.filter((s) => s.kind === kind);
-    if (!rows.length) continue;
-    step.append(el("h3", "sub-title", TRAINING.kinds[kind]));
-    for (const s of rows) {
-      const card = el("div", "session");
-      const top = el("div", "session-top");
-      top.append(el("strong", "", fmtWhen(s.starts_at)));
-      if (s.trainer_uid === m.arbiter_uid) top.append(el("span", "badge-mine", TRAINING.mineBadge));
-      card.append(top, el("div", "session-sub", `Dipandu ${s.trainer_name}${s.note ? ` • ${s.note}` : ""}`));
-      const people = s.participants || [];
-      card.append(el("div", "session-sub", people.length ? `Peserta (${people.length}): ${people.join(", ")}` : "Belum ada peserta"));
-      const btn = el("button", joined.has(s.id) ? "btn-gold small done" : "btn-gold small", joined.has(s.id) ? "Sudah terdaftar" : "Ikut sesi ini");
-      btn.type = "button";
-      btn.disabled = joined.has(s.id);
-      btn.addEventListener("click", async () => {
-        btn.disabled = true;
-        const { data, error } = await sb.rpc("join_session", { p_uid: me.uid, p_pin: me.pin, p_session: s.id });
-        if (error || data !== "ok") {
-          btn.disabled = false;
-          return say(out, "error", TR_MSG[data] || "Terjadi kesalahan, coba lagi nanti.");
-        }
-        startTraining(me);
-      });
-      card.append(btn);
-      step.append(card);
-    }
-  }
+  function draw() {
+    step.replaceChildren(el("h2", "sec-title", TRAINING.title), el("p", "sec-sub", TRAINING.rules));
 
-  step.append(el("div", `notice ${hasRequired ? "ok" : "error"}`, hasRequired ? TRAINING.requiredOk : TRAINING.requiredNo));
-  const done = el("button", "btn-gold", TRAINING.finishLabel);
-  done.type = "button";
-  done.disabled = !hasRequired;
-  done.addEventListener("click", () => finish(false));
-  const later = el("button", "btn-ghost small", TRAINING.laterLabel);
-  later.type = "button";
-  later.addEventListener("click", () => finish(true));
-  step.append(el("div", "redeem-actions"), out);
-  step.lastChild.previousSibling.append(done, later);
+    // --- Arbiter
+    step.append(el("h3", "sub-title", TRAINING.arbiterLabel));
+    if (m.arbiter_uid) {
+      step.append(el("p", "sec-sub", `${TRAINING.arbiterFixed}: ${m.arbiter_name}`));
+    } else if (!arbiters.length) {
+      step.append(el("div", "notice error", TRAINING.arbiterEmpty));
+    } else {
+      const list = el("div", "pick-list");
+      for (const a of arbiters) {
+        const n = sessions.filter((s) => s.trainer_uid === a.uid).length;
+        const b = el("button", "pick-item" + (arb === a.uid ? " on" : ""));
+        b.type = "button";
+        b.append(el("span", "pick-name", a.name), el("span", "pick-sub", `${n} sesi terjadwal`));
+        b.addEventListener("click", () => { arb = a.uid; draw(); });
+        list.append(b);
+      }
+      step.append(list, el("p", "muted small-text", TRAINING.arbiterWarn));
+    }
+
+    // --- Jadwal
+    step.append(el("p", "muted small-text", TRAINING.tip));
+    if (!sessions.length) step.append(el("div", "notice", TRAINING.noSessions));
+    for (const kind of Object.keys(TRAINING.kinds)) {
+      const rows = sessions.filter((s) => s.kind === kind);
+      if (!rows.length) continue;
+      step.append(el("h3", "sub-title", TRAINING.kinds[kind]));
+      for (const s of rows) {
+        const isJoined = joined.has(s.id);
+        const isOn = chosen.has(s.id);
+        const card = el("div", "session" + (isOn || isJoined ? " picked" : ""));
+        const top = el("div", "session-top");
+        top.append(el("strong", "", fmtWhen(s.starts_at)));
+        if (arb && s.trainer_uid === arb) top.append(el("span", "badge-mine", TRAINING.mineBadge));
+        card.append(top, el("div", "session-sub", `Dipandu ${s.trainer_name}${s.note ? ` • ${s.note}` : ""}`));
+        const people = s.participants || [];
+        card.append(el("div", "session-sub", people.length ? `Peserta (${people.length}): ${people.join(", ")}` : "Belum ada peserta"));
+        const btn = el("button", "btn-gold small" + (isOn ? " on" : ""), isJoined ? "Sudah terdaftar" : isOn ? "Batal pilih" : "Pilih sesi ini");
+        btn.type = "button";
+        btn.disabled = isJoined;
+        btn.addEventListener("click", () => { isOn ? chosen.delete(s.id) : chosen.add(s.id); draw(); });
+        card.append(btn);
+        step.append(card);
+      }
+    }
+
+    // --- Syarat
+    const has = (fn) => sessions.some((s) => chosen.has(s.id) && fn(s));
+    const ok = {
+      arbiter: !!arb,
+      sistem: m.has_sistem || has((s) => s.kind === "sistem"),
+      ekspedisi: m.has_ekspedisi || has((s) => s.kind === "ekspedisi"),
+      mine: !!arb && (m.has_arbiter_session || has((s) => s.trainer_uid === arb)),
+    };
+    const list = el("ul", "checklist");
+    for (const k of Object.keys(TRAINING.checks)) list.append(el("li", ok[k] ? "yes" : "no", `${ok[k] ? "✓" : "○"} ${TRAINING.checks[k]}`));
+    step.append(list);
+
+    const all = Object.values(ok).every(Boolean);
+    const submit = el("button", "btn-gold", m.arbiter_uid ? TRAINING.saveLabel : TRAINING.submitLabel);
+    submit.type = "button";
+    submit.disabled = !all;
+    submit.addEventListener("click", async () => {
+      submit.disabled = true;
+      const { data, error } = await sb.rpc("apply_trainee", { p_uid: me.uid, p_pin: me.pin, p_arbiter: arb, p_sessions: [...chosen] });
+      if (error || data !== "ok") {
+        submit.disabled = false;
+        return say(out, "error", TR_MSG[data] || "Terjadi kesalahan, coba lagi nanti.");
+      }
+      showDone(me.uid, me.name, false);
+    });
+    const later = el("button", "btn-ghost small", TRAINING.laterLabel);
+    later.type = "button";
+    later.addEventListener("click", () => showDone(me.uid, me.name, true));
+    const actions = el("div", "redeem-actions");
+    actions.append(submit, later);
+    step.append(actions, out);
+  }
+  draw();
 }
 
 /* ---------------------------------------------------------- registrasi */
