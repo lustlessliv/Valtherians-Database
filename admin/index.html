@@ -78,7 +78,7 @@
             <select id="staff-filter" aria-label="Filter jabatan"></select>
             <button id="staff-add-btn" class="btn primary" type="button">+ Tambah Triune</button>
           </div>
-          <p class="muted small-text">Triune dikelola terpisah dari member: tidak masuk leaderboard dan tidak punya Sigil. ID staff tetap bisa dicari di halaman Database.</p>
+          <p class="muted small-text">Triune dikelola terpisah dari member: tidak masuk leaderboard dan tidak punya Sigil. ID Triune tetap bisa dicari di halaman Database.</p>
           <div class="table-wrap">
             <table>
               <thead>
@@ -92,7 +92,7 @@
 
         <section class="card">
           <h2>Impor massal (CSV)</h2>
-          <p class="muted small-text">Format per baris: <code>uid,name,score</code>. ID yang sudah ada akan diperbarui, yang belum ada akan ditambahkan. ID staff dilewati.</p>
+          <p class="muted small-text">Format per baris: <code>uid,name,score</code>. ID yang sudah ada akan diperbarui, yang belum ada akan ditambahkan. ID Triune dilewati.</p>
           <p class="muted small-text">Untuk mengisi profil, tambahkan header: <code>uid,name,score,joined_at,title,achievements</code>. Tanggal berformat <code>2026-11-15</code>, insignia dipisah tanda <code>|</code>. Kolom profil yang tidak ada di header tidak akan mengubah data yang sudah ada.</p>
           <textarea id="import-text" rows="6" placeholder="1126000,Zero,250&#10;1126001,One,1000"></textarea>
           <div class="inline">
