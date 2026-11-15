@@ -147,3 +147,18 @@
 .link-label { display: block; font-weight: 600; }
 .link-desc { display: block; margin-top: 2px; color: var(--muted); font-size: .85rem; }
 .repo-btn { display: block; margin-top: 16px; text-align: center; text-decoration: none; padding: 12px 16px; border-radius: 8px; }
+
+.small-text { font-size: .85rem; }
+.btn-ghost.small { flex: none; min-height: 0; padding: 8px 16px; font-size: .85rem; }
+.btn-gold.small.done { opacity: .55; cursor: default; }
+.btn-gold:disabled { opacity: .5; cursor: not-allowed; }
+.pick-list { display: grid; gap: 10px; margin: 12px 0; }
+.pick-item { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--gold-deep); background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.pick-item.on { background: #1a2550; border-color: var(--gold); }
+.pick-name { font-weight: 600; }
+.pick-sub { color: var(--muted); font-size: .8rem; }
+.session { border: 1px solid #2a3566; border-radius: 8px; padding: 12px 14px; margin: 0 0 10px; display: grid; gap: 6px; }
+.session-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.session-sub { color: var(--muted); font-size: .85rem; overflow-wrap: anywhere; }
+.badge-mine { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #140e02; background: var(--gold); border-radius: 999px; padding: 2px 8px; font-weight: 700; }
+.session .btn-gold { justify-self: start; }
