@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Repository Valtherians</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="../assets/repository.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/shared-BhyKLrjU.js">
+    <link rel="stylesheet" crossorigin href="../assets/shared-FCsielAh.css">
+    <link rel="stylesheet" href="../theme.css">
+    <link rel="stylesheet" href="../database.css">
+  </head>
+  <body data-page="repository">
+    <!-- Navbar, hero, dan footer dibuat oleh assets/layout.js. Isi halaman dibuat oleh assets/repository.js -->
+    <main class="container">
+      <section class="card" id="login-card">
+        <h2 class="sec-title" id="login-title"></h2>
+        <p class="sec-sub" id="login-sub"></p>
+        <form id="login-form" class="redeem-form" autocomplete="off">
+          <label for="lg-uid">ID</label>
+          <input id="lg-uid" type="text" placeholder="ID kamu" />
+          <label for="lg-pin">Emblem</label>
+          <input id="lg-pin" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false" />
+          <div class="redeem-actions"><button class="btn-gold" type="submit">Masuk</button></div>
+        </form>
+        <div id="login-result" aria-live="polite"></div>
+      </section>
+
+      <div id="repo" hidden></div>
+    </main>
+  </body>
+</html>
