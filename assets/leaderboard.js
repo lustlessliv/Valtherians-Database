@@ -143,6 +143,7 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
       await showStatus(out, uid);
       load(); // segarkan leaderboard
     } else if (r?.status === "used") say(out, "error", "Kode ini sudah pernah dipakai.");
+    else if (r?.status === "maintenance") say(out, "error", "Sedang dalam masa maintenance. Redeem ditutup sampai Chronicles berikutnya dimulai.");
     else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah Triune dan tidak bisa menukar kode.`);
     else if (r?.status === "no_player") say(out, "error", `${LABELS.id} "${uid}" tidak ditemukan.`);
     else say(out, "error", "Kode tidak valid.");
