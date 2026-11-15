@@ -142,6 +142,38 @@
 <p id="pins-note" class="muted small-text"></p>
         </section>
 
+        <section class="card" id="training-card">
+          <h2>Training</h2>
+          <p class="muted small-text">Isi jadwal sesi tiap minggu. Jam dalam WIB. Member hanya melihat sesi yang akan datang.</p>
+          <form id="train-form" class="inline">
+            <select id="train-kind" aria-label="Jenis sesi">
+              <option value="sistem">Pengenalan sistem Legion (online)</option>
+              <option value="ekspedisi">Pelatihan ekspedisi (in-game)</option>
+            </select>
+            <select id="train-trainer" aria-label="Triune pemandu"></select>
+            <input id="train-when" type="datetime-local" aria-label="Waktu (WIB)" />
+            <input id="train-text" type="text" maxlength="120" placeholder="Catatan (opsional)" />
+            <button class="btn primary" type="submit">Tambah sesi</button>
+          </form>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Waktu</th><th>Jenis</th><th>Dipandu</th><th>Catatan</th><th>Peserta (ID)</th><th></th></tr></thead>
+              <tbody id="train-body"></tbody>
+            </table>
+          </div>
+          <p id="train-note" class="muted small-text"></p>
+
+          <h2>Arbiter member</h2>
+          <p class="muted small-text">Member memilih Arbiter sendiri satu kali. Perubahan setelahnya hanya lewat sini.</p>
+          <form id="arb-form" class="inline">
+            <input id="arb-uid" type="text" placeholder="ID member" />
+            <select id="arb-select" aria-label="Arbiter"></select>
+            <button class="btn" id="arb-show" type="button">Lihat Arbiter</button>
+            <button class="btn primary" type="submit">Simpan</button>
+          </form>
+          <p id="arb-out" class="muted small-text"></p>
+        </section>
+
         <section class="card" id="codes-card">
           <h2>Kode redeem</h2>
           <p class="muted small-text">Tiap kode hanya bisa dipakai satu kali dan menambah Sigil(s) ke ID yang memakainya. Kosongkan kolom kode sendiri kalau mau dibuatkan acak.</p>
