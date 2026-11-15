@@ -39,9 +39,7 @@ function setMode(next) {
   const hero = document.querySelector(".hero");
   if (hero) hero.style.display = mode === "register" || mode === "resume" ? "none" : "";
 }
-setMode(null);
-
-$("#rename-sub").textContent = `Pakai ${LABELS.id} dan ${LABELS.pin}-mu. ${WELCOME.renameCooldownText}`;
+setMode(new URLSearchParams(location.search).get("tab") === "resume" ? "resume" : null);
 
 /* ---------------------------------------------------------- kartu sambutan */
 
