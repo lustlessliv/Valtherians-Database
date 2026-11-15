@@ -3,7 +3,7 @@
 import { SITE, NAV, PAGES } from "./config.js";
 
 const ROOT = new URL("../", import.meta.url); // folder utama website
-const url = (p) => (p ? new URL(p, ROOT).href : "");
+const url = (p) => new URL(p || "./", ROOT).href; // "" = halaman utama
 
 function make(tag, cls, html) {
   const n = document.createElement(tag);
@@ -47,30 +47,3 @@ function buildHero(info) {
   const card = make("div", "hero-card");
   if (SITE.bannerLeft) card.append(img("banner left", SITE.bannerLeft));
   if (SITE.bannerRight) card.append(img("banner right", SITE.bannerRight));
-  card.append(
-    img("hero-logo", SITE.logo, "Logo"),
-    make("p", "eyebrow", SITE.eyebrow),
-    make("h1", "", info.title),
-    make("p", "motto", SITE.motto),
-    make("p", "sub", info.sub)
-  );
-  hero.append(card);
-  return hero;
-}
-
-function buildFooter() {
-  const f = make("footer", "site-footer");
-  const inner = make("div", "footer-in");
-  inner.append(
-    make("p", "motto", SITE.motto),
-    make("p", "", SITE.footerLine),
-    make("p", "credit", SITE.credit)
-  );
-  f.append(inner);
-  return f;
-}
-
-const page = document.body.dataset.page;
-const info = PAGES[page] || { title: document.title, sub: "" };
-document.body.prepend(buildNav(page), buildHero(info));
-document.body.append(buildFooter());
