@@ -34,7 +34,21 @@
       <!-- 2. Muncul setelah berhasil -->
       <div id="done" hidden></div>
 
-      <!-- 3. Ganti nama -->
+      <!-- 3. Lanjutkan training (kalau halaman sempat tertutup) -->
+      <section class="card" id="resume-card">
+        <h2 class="sec-title">Lanjutkan Training</h2>
+        <p class="sec-sub">Sudah punya ID? Masuk dengan ID dan Emblem untuk memilih Arbiter atau sesi Training.</p>
+        <form id="res-form" class="redeem-form" autocomplete="off">
+          <label for="res-uid">ID</label>
+          <input id="res-uid" type="text" placeholder="ID kamu" />
+          <label for="res-pin">Emblem</label>
+          <input id="res-pin" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false" />
+          <div class="redeem-actions"><button class="btn-gold" type="submit">Lanjutkan</button></div>
+        </form>
+        <div id="res-result" aria-live="polite"></div>
+      </section>
+
+      <!-- 4. Ganti nama -->
       <section class="card" id="rename-card">
         <h2 class="sec-title">Ganti nama</h2>
         <p class="sec-sub" id="rename-sub"></p>
