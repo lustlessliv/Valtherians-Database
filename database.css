@@ -170,3 +170,28 @@
 .checklist { list-style: none; margin: 14px 0 6px; padding: 0; display: grid; gap: 4px; font-size: .9rem; }
 .checklist .yes { color: #9fe6b6; }
 .checklist .no { color: var(--muted); }
+
+.rank-pill { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--c); color: var(--c); font-size: .8rem; font-weight: 600; letter-spacing: .04em; }
+.repo-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 16px; text-align: left; margin-top: 10px; }
+.fact-label { color: var(--muted); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; }
+.fact-value { margin-top: 2px; font-weight: 600; overflow-wrap: anywhere; }
+.chart-wrap { position: relative; width: 100%; margin-top: 8px; }
+.chart-wrap svg { display: block; max-width: 100%; }
+.ch-grid { stroke: var(--border); stroke-width: 1; opacity: .6; }
+.ch-axis { stroke: var(--muted); stroke-width: 1; opacity: .7; }
+.ch-ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 4; opacity: .6; }
+.ch-hatch { stroke: var(--border); stroke-width: 3; opacity: .55; }
+.ch-tick { fill: var(--muted); font-size: 11px; font-family: Inter, system-ui, sans-serif; }
+.ch-maint { fill: var(--muted); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-family: Inter, system-ui, sans-serif; }
+.ch-line { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.ch-dot { fill: var(--gold); stroke: var(--panel); stroke-width: 2; }
+.ch-last { fill: var(--text); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; font-family: Inter, system-ui, sans-serif; }
+.ch-cross { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.chart-tip { position: absolute; pointer-events: none; background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: .8rem; white-space: nowrap; }
+.chart-tip .tip-date { color: var(--muted); }
+.chart-tip .tip-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+.chart-table { margin-top: 10px; color: var(--muted); font-size: .85rem; }
+.chart-table summary { cursor: pointer; }
+.chart-table table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.chart-table th, .chart-table td { text-align: left; padding: 4px 6px; border-top: 1px solid var(--border); }
+.chart-table .num { text-align: right; font-variant-numeric: tabular-nums; }
