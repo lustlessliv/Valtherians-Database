@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Valtherians Database</title>
+    <title>Legionate Database</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -18,9 +18,9 @@
          Teks, logo, dan banner diatur di assets/config.js. -->
     <main class="container">
       <section class="search card">
-        <label for="uid-input">Cari member</label>
+        <label for="uid-input">Cari Valtherian</label>
         <form id="search-form" autocomplete="off">
-          <input id="uid-input" type="text" placeholder="Masukkan ID member..." />
+          <input id="uid-input" type="text" placeholder="Masukkan ID" />
           <button type="submit">Cari</button>
         </form>
         <div id="search-result" aria-live="polite"></div>
@@ -28,7 +28,6 @@
 
       <section class="card">
         <h2 class="sec-title">Total Valtherians</h2>
-        <p class="sec-sub">Semua member dan staff Triune</p>
         <div class="total-row">
           <span id="total-num" class="total-num">…</span>
           <span id="total-sub" class="total-sub"></span>
@@ -42,8 +41,8 @@
       </section>
 
       <section class="card">
-        <h2 class="sec-title">Member</h2>
-        <p class="sec-sub" id="member-sub">Jumlah member per rank</p>
+        <h2 class="sec-title">Knighthood</h2>
+        <p class="sec-sub" id="member-sub">Jumlah Valtherian per rank</p>
         <div id="member-stats" class="stat-grid"></div>
         <p id="stats-note" class="stats-note"></p>
       </section>
