@@ -1,4 +1,3 @@
-// Halaman utama: Cari ID  >  Leaderboard  >  Redeem code
 import "./layout.js";
 import { RANKS, TOP, configured, el, fmt, rangeText, sb } from "./lib.js";
 import { LABELS } from "./config.js";
@@ -129,7 +128,7 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
       say(out, "ok", `Kode valid! +${fmt.format(r.points_added)} ${LABELS.points}`);
       $("#r-code").value = "";
       await showStatus(out, uid);
-      load(); // segarkan leaderboard
+      load(); 
     } else if (r?.status === "used") say(out, "error", "Kode ini sudah pernah dipakai.");
     else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah Triune dan tidak bisa menukar kode.`);
     else if (r?.status === "no_player") say(out, "error", `${LABELS.id} "${uid}" tidak ditemukan.`);
