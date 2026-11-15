@@ -131,3 +131,18 @@ export const TRAINING = {
   laterText: "Kamu bisa melanjutkan pemilihan Arbiter dan jadwal kapan saja lewat tab \"Lanjutkan Training\".",
   doneTitle: "Selamat datang di Valthera Legion",
 };
+
+export const REPOSITORY = {
+  loginTitle: "Masuk ke Repository",
+  loginText: "Masuk dengan ID dan Emblem-mu. Sesi login berlaku 60 menit.",
+  logout: "Keluar",
+  profileTitle: "Profil",
+  trainingTitle: "Training",
+  trainingEmpty: "Belum ada sesi Training yang kamu ikuti.",
+  trainingContinue: "Pilih atau lengkapi Training",
+  graphTitle: "Grafik Sigil(s)",
+  graphMaintenance: "Maintenance",
+  graphMaintenanceNote: "Season sedang maintenance. Redeem ditutup sampai season berikutnya dimulai.",
+  staffNote: "Triune tidak masuk leaderboard dan tidak memiliki Sigil(s), jadi grafik Sigil(s) tidak ditampilkan.",
+  expired: "Sesi login habis. Masuk lagi untuk melanjutkan.",
+};
