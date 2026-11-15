@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Dashboard Triune Aldervane</title>
+    <title>Dashboard Triune</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -43,26 +43,26 @@
         <section id="stats" class="stats"></section>
 
         <section class="card">
-          <h2>Tambah / kurangi Sigil(s) cepat</h2>
+          <h2>Tambah / kurangi Sigil</h2>
           <form id="adjust-form" class="inline">
             <input id="a-uid" placeholder="ID Valtherian" required />
-            <input id="a-delta" type="number" step="1" placeholder="Jumlah Sigil(s), mis. 150 atau -50" required />
+            <input id="a-delta" type="number" step="1" placeholder="Jumlah Sigil, cth: 150 atau -50" required />
             <button class="btn primary" type="submit">Terapkan</button>
           </form>
         </section>
 
         <section class="card">
           <div class="toolbar">
-            <h2>Valtherians (member)</h2>
+            <h2>Valtherians</h2>
             <span class="spacer"></span>
-            <input id="search" type="search" placeholder="Cari ID atau nama..." />
+            <input id="search" type="search" placeholder="Cari ID atau Nama" />
             <select id="rank-filter" aria-label="Filter rank"></select>
-            <button id="add-btn" class="btn primary" type="button">+ Tambah Valtherian</button>
+            <button id="add-btn" class="btn primary" type="button">Tambah Valtherian</button>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Nama</th><th>Rank</th><th class="num">Sigil</th><th>Insignia</th><th>Tanggal bergabung</th><th></th></tr>
+                <tr><th>ID</th><th>Nama</th><th>Rank</th><th class="num">Sigil</th><th>Insignia</th><th>Tanggal Bergabung</th><th></th></tr>
               </thead>
               <tbody id="players-body"></tbody>
             </table>
@@ -72,17 +72,17 @@
 
         <section class="card" id="staff-card">
           <div class="toolbar">
-            <h2>Staff Triune</h2>
+            <h2>Triune</h2>
             <span class="spacer"></span>
-            <input id="staff-search" type="search" placeholder="Cari ID atau nama..." />
+            <input id="staff-search" type="search" placeholder="Cari ID atau Nama" />
             <select id="staff-filter" aria-label="Filter jabatan"></select>
-            <button id="staff-add-btn" class="btn primary" type="button">+ Tambah staff</button>
+            <button id="staff-add-btn" class="btn primary" type="button">+ Tambah Triune</button>
           </div>
-          <p class="muted small-text">Staff dikelola terpisah dari member: tidak masuk leaderboard dan tidak punya Sigil(s). ID staff tetap bisa dicari di halaman Database.</p>
+          <p class="muted small-text">Triune dikelola terpisah dari member: tidak masuk leaderboard dan tidak punya Sigil. ID staff tetap bisa dicari di halaman Database.</p>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Nama</th><th>Jabatan</th><th>Status</th><th>Tanggal bergabung</th><th></th></tr>
+                <tr><th>ID</th><th>Nama</th><th>Posisi</th><th>Status</th><th>Tanggal Bergabung</th><th></th></tr>
               </thead>
               <tbody id="staff-body"></tbody>
             </table>
@@ -93,8 +93,8 @@
         <section class="card">
           <h2>Impor massal (CSV)</h2>
           <p class="muted small-text">Format per baris: <code>uid,name,score</code>. ID yang sudah ada akan diperbarui, yang belum ada akan ditambahkan. ID staff dilewati.</p>
-          <p class="muted small-text">Untuk mengisi profil, tambahkan header: <code>uid,name,score,joined_at,title,achievements</code>. Tanggal berformat <code>2025-01-31</code>, insignia dipisah tanda <code>|</code>. Kolom profil yang tidak ada di header tidak akan mengubah data yang sudah ada.</p>
-          <textarea id="import-text" rows="6" placeholder="1001,Aethelred,9120&#10;1002,Lyra,8450"></textarea>
+          <p class="muted small-text">Untuk mengisi profil, tambahkan header: <code>uid,name,score,joined_at,title,achievements</code>. Tanggal berformat <code>2026-11-15</code>, insignia dipisah tanda <code>|</code>. Kolom profil yang tidak ada di header tidak akan mengubah data yang sudah ada.</p>
+          <textarea id="import-text" rows="6" placeholder="1126000,Zero,250&#10;1126001,One,1000"></textarea>
           <div class="inline">
             <input id="import-file" type="file" accept=".csv,.txt" />
             <span class="spacer"></span>
@@ -103,14 +103,14 @@
         </section>
 
         <section class="card" id="codes-card">
-          <h2>Kode redeem</h2>
-          <p class="muted small-text">Tiap kode hanya bisa dipakai satu kali dan menambah Sigil(s) ke ID yang memakainya. Kosongkan kolom kode sendiri kalau mau dibuatkan acak.</p>
+          <h2>Kode Redeem</h2>
+          <p class="muted small-text">Tiap kode hanya bisa dipakai satu kali dan menambah Sigil ke ID yang menggunakannya. Kosongkan kolom kode sendiri kalau mau dibuatkan acak.</p>
           <form id="code-form" class="inline">
-            <input id="c-points" type="number" min="1" step="1" placeholder="Sigil(s) per kode" required />
-            <input id="c-qty" type="number" min="1" max="100" step="1" value="1" placeholder="Jumlah kode" required />
-            <input id="c-custom" maxlength="40" placeholder="Kode sendiri (opsional)" />
+            <input id="c-points" type="number" min="1" step="1" placeholder="Sigil" required />
+            <input id="c-qty" type="number" min="1" max="100" step="1" value="1" placeholder="Jumlah Kode" required />
+            <input id="c-custom" maxlength="40" placeholder="Kode (opsional)" />
             <input id="c-note" maxlength="80" placeholder="Catatan (opsional)" />
-            <button class="btn primary" type="submit">Buat kode</button>
+            <button class="btn primary" type="submit">Buat Kode</button>
           </form>
           <textarea id="c-output" rows="4" readonly hidden></textarea>
           <div class="inline" id="c-output-actions" hidden>
@@ -119,7 +119,7 @@
             <button id="c-copy" class="btn small" type="button">Salin</button>
           </div>
           <div class="toolbar">
-            <h2>Daftar kode</h2>
+            <h2>Daftar Kode</h2>
             <span class="spacer"></span>
             <select id="c-filter" aria-label="Filter kode">
               <option value="all">Semua</option>
@@ -129,7 +129,7 @@
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Kode</th><th class="num">Sigil(s)</th><th>Catatan</th><th>Status</th><th></th></tr></thead>
+              <thead><tr><th>Kode</th><th class="num">Sigil</th><th>Catatan</th><th>Status</th><th></th></tr></thead>
               <tbody id="codes-body"></tbody>
             </table>
           </div>
@@ -137,7 +137,7 @@
         </section>
 
         <section class="card">
-          <h2>Riwayat perubahan</h2>
+          <h2>Riwayat Perubahan</h2>
           <ul id="log" class="log"></ul>
         </section>
       </div>
@@ -148,11 +148,11 @@
         <h2 id="dialog-title">Valtherians</h2>
         <label>ID <input id="f-uid" required /></label>
         <label>Nama <input id="f-name" required /></label>
-        <label>Sigil(s) <input id="f-score" type="number" min="0" step="1" required /></label>
-        <label>Tanggal bergabung <input id="f-joined" type="date" /></label>
-        <label>Title <input id="f-title" maxlength="60" placeholder="mis. Penjaga Gerbang Utara" /></label>
-        <label>Insignia / achievement (satu per baris, maks. 20)
-          <textarea id="f-ach" rows="4" placeholder="Pembasmi Naga&#10;Juara Turnamen Musim Semi"></textarea>
+        <label>Sigil <input id="f-score" type="number" min="0" step="1" required /></label>
+        <label>Tanggal Bergabung <input id="f-joined" type="date" /></label>
+        <label>Title <input id="f-title" maxlength="60" placeholder="The Darkhorse" /></label>
+        <label>Insignia / Achievement (satu per baris, maks 20)
+          <textarea id="f-ach" rows="4" placeholder="Vanguard of Aldervane&#10;Sigil's Maniac"></textarea>
         </label>
         <div class="inline end">
           <button id="cancel-btn" class="btn" type="button">Batal</button>
@@ -163,10 +163,10 @@
 
     <dialog id="staff-dialog">
       <form id="staff-form" class="stack">
-        <h2 id="staff-dialog-title">Staff</h2>
+        <h2 id="staff-dialog-title">Triune</h2>
         <label>ID <input id="s-uid" required /></label>
         <label>Nama <input id="s-name" required /></label>
-        <label>Jabatan <select id="s-role"></select></label>
+        <label>Posisi <select id="s-role"></select></label>
         <label id="s-division-wrap">Divisi Segate <select id="s-division"></select></label>
         <label>Status
           <select id="s-active">
@@ -174,9 +174,9 @@
             <option value="false">Deactive</option>
           </select>
         </label>
-        <label>Tanggal bergabung <input id="s-joined" type="date" /></label>
+        <label>Tanggal Bergabung <input id="s-joined" type="date" /></label>
         <label>Title <input id="s-title" maxlength="60" placeholder="opsional" /></label>
-        <label>Insignia / achievement (satu per baris, maks. 20)
+        <label>Insignia / Achievement (satu per baris, maks. 20)
           <textarea id="s-ach" rows="3"></textarea>
         </label>
         <div class="inline end">
