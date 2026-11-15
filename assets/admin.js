@@ -1,5 +1,3 @@
-// Dashboard Triune: kelola member (leaderboard), staff, impor CSV, riwayat.
-// Kode redeem ada di admin-codes.js.
 import "./layout.js";
 import { RANKS, configured, el, fmt, parseCsv, rankFor, sb } from "./lib.js";
 import { LABELS, STAFF_ROLES } from "./config.js";
@@ -7,17 +5,17 @@ import { ASPIRANT, staffSort, staffTag } from "./api.js";
 
 const $ = (q) => document.querySelector(q);
 
-const PAGE_SIZE = 50;      // jumlah baris member per halaman tabel
+const PAGE_SIZE = 50;      
 const MAX_TITLE = 60;
-const MAX_ACH = 20;        // maks. insignia per orang
+const MAX_ACH = 20;        
 
 let players = [];
 let staff = [];
-let staffReady = true;     // false kalau tabel staff belum dibuat (supabase-staff.sql belum dijalankan)
+let staffReady = true;     
 let rankFilter = "all";
 let search = "";
-let page = 1;              // halaman tabel member yang sedang dibuka
-let editingUid = null;     // null = tambah member baru
+let page = 1;              
+let editingUid = null;     
 let staffFilter = "all";
 let staffSearch = "";
 let editingStaffUid = null;
