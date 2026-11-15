@@ -43,11 +43,11 @@ function renderTriune(staff, error) {
   const box = $("#triune");
   box.replaceChildren();
   if (error) {
-    box.append(el("p", "stats-note", configured ? "Data staff belum tersedia (jalankan supabase-staff.sql, lihat README)." : "Database belum dikonfigurasi (lihat README)."));
+    box.append(el("p", "stats-note", configured ? "Data Triune belum tersedia (jalankan supabase-staff.sql, lihat README)." : "Database belum dikonfigurasi (lihat README)."));
     return;
   }
   if (!staff.length) {
-    box.append(el("p", "stats-note", "Belum ada staff yang terdata."));
+    box.append(el("p", "stats-note", "Belum ada Triune yang terdata."));
     return;
   }
   for (const s of staff) box.append(staffCard(s));
@@ -93,7 +93,7 @@ async function renderStats(counts, complete) {
   grid.replaceChildren(...cats.map((c) => tile(c, c.id in counts ? fmt.format(counts[c.id]) : "–")));
   if (complete) {
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    $("#member-sub").textContent = `Jumlah member per rank • total ${fmt.format(total)} member`;
+    $("#member-sub").textContent = `Jumlah Valtherians per rank.`;
     note.textContent = "";
   } else {
     note.textContent = `Jumlah ${LABELS.aspirant} belum tersedia: jalankan supabase-setup.sql di Supabase (lihat README).`;
