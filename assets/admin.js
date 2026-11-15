@@ -1,5 +1,4 @@
-// Dashboard Triune: kelola member (leaderboard), staff, impor CSV, riwayat.
-// Kode redeem ada di admin-codes.js.
+// Dashboard Triune //
 import "./layout.js";
 import { RANKS, configured, el, fmt, parseCsv, rankFor, sb } from "./lib.js";
 import { LABELS, STAFF_ROLES } from "./config.js";
@@ -7,16 +6,16 @@ import { ASPIRANT, staffSort, staffTag } from "./api.js";
 
 const $ = (q) => document.querySelector(q);
 
-const TABLE_LIMIT = 100;   // maks. baris member yang ditampilkan
+const TABLE_LIMIT = 100;   
 const MAX_TITLE = 60;
-const MAX_ACH = 20;        // maks. insignia per orang
+const MAX_ACH = 20;     
 
 let players = [];
 let staff = [];
-let staffReady = true;     // false kalau tabel staff belum dibuat (supabase-staff.sql belum dijalankan)
+let staffReady = true;     
 let rankFilter = "all";
 let search = "";
-let editingUid = null;     // null = tambah member baru
+let editingUid = null;     
 let staffFilter = "all";
 let staffSearch = "";
 let editingStaffUid = null;
@@ -223,7 +222,7 @@ async function removeMember(p) {
   await loadAll();
 }
 
-/* ---------------------------------------------------------- tambah / kurangi Sigil cepat */
+/* ---------------------------------------------------------- tambah / kurangi Sigil */
 
 $("#adjust-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
@@ -389,7 +388,6 @@ async function loadLog() {
 
 /* ---------------------------------------------------------- impor CSV */
 
-// kolom opsional di header -> nama kolom database
 const OPTIONAL_COLS = [
   ["joined_at", ["joined_at", "joined", "bergabung"]],
   ["title", ["title"]],
