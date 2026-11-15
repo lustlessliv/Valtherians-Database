@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard Aldervane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/leaderboard.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/shared-BhyKLrjU.js">
+    <link rel="stylesheet" crossorigin href="./assets/shared-FCsielAh.css">
+    <link rel="stylesheet" href="./theme.css">
+    <link rel="stylesheet" href="./database.css">
+  </head>
+  <body data-page="leaderboard">
+    <!-- Navbar, hero (logo + banner) dan footer dibuat otomatis oleh assets/layout.js.
+         Teks, logo, dan banner diatur di assets/config.js. -->
+    <main class="container">
+      <!-- 1. Cari ID -->
+      <section class="search card" id="check">
+        <label for="uid-input">Cari ID</label>
+        <form id="search-form" autocomplete="off">
+          <input id="uid-input" type="text" placeholder="Masukkan ID..." />
+          <button type="submit">Cari</button>
+        </form>
+        <div id="search-result" aria-live="polite"></div>
+      </section>
+
+      <!-- 2. Leaderboard -->
+      <nav class="tabs" role="tablist" id="tabs"></nav>
+      <section class="card">
+        <div id="tab-info" class="tab-info"></div>
+        <ol id="board" class="board"></ol>
+      </section>
+      <p id="updated" class="updated"></p>
+
+      <!-- 3. Redeem -->
+      <section class="card" id="redeem">
+        <h2 class="sec-title">Redeem code</h2>
+        <p class="sec-sub">Tukar kode dengan Sigil(s). Tiap kode hanya bisa dipakai satu kali.</p>
+        <form id="redeem-form" class="redeem-form" autocomplete="off">
+          <label for="r-uid">ID</label>
+          <input id="r-uid" type="text" placeholder="ID kamu" inputmode="text" />
+          <label for="r-code">Kode</label>
+          <input id="r-code" type="text" placeholder="VAL-XXXX-XXXX" autocapitalize="characters" spellcheck="false" />
+          <div class="redeem-actions">
+            <button class="btn-gold" type="submit">Redeem</button>
+          </div>
+        </form>
+        <div id="redeem-result" aria-live="polite"></div>
+      </section>
+    </main>
+  </body>
+</html>
