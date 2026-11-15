@@ -1,3 +1,4 @@
+// Halaman Valtherians Database: cari ID, total Valtherians, profil Triune, statistik member.
 import "./layout.js";
 import { RANKS, configured, el, fmt, sb } from "./lib.js";
 import { LABELS, STAFF_ROLES } from "./config.js";
@@ -9,10 +10,12 @@ const $ = (q) => document.querySelector(q);
 /* ---------------------------------------------------------- data */
 
 async function loadMemberCounts() {
+  // 1) fungsi khusus (lihat supabase-setup.sql): lengkap termasuk Aspirant
   const full = await sb.rpc("get_member_stats");
   if (!full.error && Array.isArray(full.data)) {
     return { counts: Object.fromEntries(full.data.map((r) => [r.rank_id, Number(r.total)])), complete: true };
   }
+  // 2) cadangan: total per rank dari get_leaderboard (tanpa Aspirant)
   const lb = await sb.rpc("get_leaderboard");
   if (lb.error) return null;
   const counts = {};
@@ -90,7 +93,7 @@ async function renderStats(counts, complete) {
   grid.replaceChildren(...cats.map((c) => tile(c, c.id in counts ? fmt.format(counts[c.id]) : "–")));
   if (complete) {
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    $("#member-sub").textContent = `Jumlah Valtherians per rank.`;
+    $("#member-sub").textContent = `Jumlah member per rank • total ${fmt.format(total)} member`;
     note.textContent = "";
   } else {
     note.textContent = `Jumlah ${LABELS.aspirant} belum tersedia: jalankan supabase-setup.sql di Supabase (lihat README).`;
