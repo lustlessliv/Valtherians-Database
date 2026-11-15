@@ -123,24 +123,22 @@
             <span class="spacer"></span>
             <button id="pin-copy" class="btn small" type="button">Salin</button>
           </div>
-          <div class="toolbar">
-            <h2>Daftar Emblem</h2>
-            <span class="spacer"></span>
-            <select id="pin-filter" aria-label="Filter Emblem">
-              <option value="all">Semua</option>
-              <option value="free">Belum dipakai</option>
-              <option value="used">Sudah terikat ID</option>
-              <option value="test">Uji coba</option>
-            </select>
-            <button id="test-clean" class="btn small danger" type="button">Hapus data uji coba</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Catatan</th><th>Status</th><th>ID</th><th>Dibuat</th><th></th></tr></thead>
-              <tbody id="pins-body"></tbody>
-            </table>
-          </div>
-          <p id="pins-note" class="muted small-text"></p>
+          <h2>Ringkasan Emblem</h2>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Catatan</th><th>Dibuat</th><th>Terpakai</th><th>Belum dipakai</th><th></th></tr></thead>
+    <tbody id="pins-summary"></tbody>
+  </table>
+</div>
+
+<div class="toolbar"><h2>Emblem uji coba</h2><button type="button" id="test-clean" class="btn">Bersihkan data uji coba</button></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Emblem</th><th>Catatan</th><th>Status</th><th>ID</th></tr></thead>
+    <tbody id="pins-body"></tbody>
+  </table>
+</div>
+<p id="pins-note" class="muted small-text"></p>
         </section>
 
         <section class="card" id="codes-card">
