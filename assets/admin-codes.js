@@ -92,8 +92,8 @@ $("#code-form").addEventListener("submit", async (ev) => {
 
   if (!Number.isInteger(points) || points < 1) return toast(`${LABELS.points} harus angka 1 atau lebih.`, true);
   if (!Number.isInteger(qty) || qty < 1 || qty > 100) return toast("Jumlah kode 1 sampai 100.", true);
-  if (custom && qty !== 1) return toast("Kode sendiri hanya untuk jumlah 1.", true);
-  if (custom && !/^[A-Z0-9-]{4,40}$/.test(custom)) return toast("Kode sendiri: 4-40 karakter huruf/angka/tanda -", true);
+  if (custom && qty !== 1) return toast("Kode custom hanya untuk jumlah 1.", true);
+  if (custom && !/^[A-Z0-9-]{4,40}$/.test(custom)) return toast("Kode custom: 4-40 karakter huruf/angka/tanda -", true);
 
   const made = new Set();
   while (made.size < qty) made.add(custom || randomCode());
