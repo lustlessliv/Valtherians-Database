@@ -44,6 +44,7 @@ export const NAV = [
   { key: "leaderboard", label: "Leaderboard", href: "" },
   { key: "register",    label: "Daftar",      href: "daftar/", hidden: true }, // hanya tampil di halamannya sendiri
   { key: "admin",       label: "Triune",      href: "admin/", hidden: true },
+  { key: "repository",  label: "Repository",  href: "repository/" },
 ];
 
 export const PAGES = {
