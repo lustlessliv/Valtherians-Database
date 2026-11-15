@@ -23,7 +23,7 @@ export const SITE = {
 // ----- Istilah yang tampil di website (hanya tampilan, nama kolom database tidak berubah) -----
 export const LABELS = {
   id: "ID",
-  points: "Sigil(s)",      // dipakai di kalimat, mis. "500 Sigil(s)"
+  points: "Sigil",      // dipakai di kalimat, mis. "500 Sigil(s)"
   pointsColumn: "Sigil",   // dipakai di judul kolom tabel
   aspirant: "Aspirant",
   unranked: "Belum dinobatkan",
@@ -39,16 +39,16 @@ export const NAV = [
 
 export const PAGES = {
   leaderboard: {
-    title: "Leaderboard Aldervane",
-    sub: "Peringkat para pahlawan terbaik. Cari ID untuk cek Sigil(s) dan peringkatmu.",
+    title: "Valthera Legion Leaderboard",
+    sub: "Peringkat para pahlawan terbaik. Cari ID untuk cek jumlah Sigil dan peringkatmu.",
   },
   database: {
-    title: "Valtherians Database",
-    sub: "Catatan resmi para Valtherian. Cari ID untuk melihat kartu ID.",
+    title: "Legionate Database",
+    sub: "Catatan resmi para Valtherian. Cari ID untuk melihat ID card.",
   },
   admin: {
     title: "Dashboard Triune",
-    sub: "Kelola Valtherians, staff, dan Sigil(s) leaderboard Aldervane",
+    sub: "Kelola catatan Valtherians, Triune, dan Sigil Legionate Leaderboard",
     small: true, // hero kecil tanpa logo & banner
   },
 };
