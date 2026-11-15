@@ -191,7 +191,7 @@ $("#edit-form").addEventListener("submit", async (ev) => {
   const name = $("#f-name").value.trim();
   const score = parseInt($("#f-score").value, 10);
   if (!uid || !name || !Number.isInteger(score) || score < 0) return toast("Data tidak valid.", true);
-  if (editingUid === null && staffUids().has(uid)) return toast(`${LABELS.id} ini terdaftar sebagai staff, tidak bisa masuk leaderboard.`, true);
+  if (editingUid === null && staffUids().has(uid)) return toast(`${LABELS.id} ini terdaftar sebagai Triune, tidak bisa masuk leaderboard.`, true);
 
   const ach = cleanList($("#f-ach").value.split("\n"));
   if (ach.length > MAX_ACH) return toast(`Maksimal ${MAX_ACH} insignia.`, true);
@@ -230,7 +230,7 @@ $("#adjust-form").addEventListener("submit", async (ev) => {
   const uid = $("#a-uid").value.trim();
   const delta = parseInt($("#a-delta").value, 10);
   if (!uid || !Number.isInteger(delta)) return toast(`Isi ${LABELS.id} dan jumlah ${LABELS.points} (boleh negatif).`, true);
-  if (staffUids().has(uid)) return toast(`${LABELS.id} ini staff, tidak punya ${LABELS.points}.`, true);
+  if (staffUids().has(uid)) return toast(`${LABELS.id} ini Triune, tidak punya ${LABELS.points}.`, true);
   const { data, error } = await sb.rpc("adjust_score", { p_uid: uid, p_delta: delta });
   if (error) return toast(error.message, true);
   if (data === null) return toast(`${LABELS.id} tidak ditemukan.`, true);
@@ -252,7 +252,7 @@ function renderStaff() {
 
   if (!staffReady) {
     const tr = el("tr");
-    const td = el("td", "empty", "Tabel staff belum ada. Jalankan supabase-staff.sql di Supabase (lihat README).");
+    const td = el("td", "empty", "Tabel Triune belum ada. Jalankan supabase-staff.sql di Supabase (lihat README).");
     td.colSpan = 6;
     tr.append(td);
     body.append(tr);
@@ -268,7 +268,7 @@ function renderStaff() {
 
   if (!rows.length) {
     const tr = el("tr");
-    const td = el("td", "empty", "Belum ada staff.");
+    const td = el("td", "empty", "Belum ada Triune.");
     td.colSpan = 6;
     tr.append(td);
     body.append(tr);
@@ -296,7 +296,7 @@ function syncDivisionField() {
 
 function openStaffDialog(s) {
   editingStaffUid = s ? s.uid : null;
-  $("#staff-dialog-title").textContent = s ? "Edit staff" : "Tambah staff";
+  $("#staff-dialog-title").textContent = s ? "Edit Triune" : "Tambah Triune";
   $("#s-uid").value = s?.uid ?? "";
   $("#s-uid").readOnly = !!s;
   $("#s-name").value = s?.name ?? "";
@@ -342,25 +342,25 @@ $("#staff-form").addEventListener("submit", async (ev) => {
     const asMember = players.find((p) => p.uid === uid);
     if (asMember && !confirm(
       `${LABELS.id} ${uid} (${asMember.name}) masih terdaftar sebagai member dengan ${fmt.format(asMember.score)} ${LABELS.points}.\n\n` +
-      "Kalau dijadikan staff, datanya dihapus dari leaderboard (tercatat di riwayat perubahan). Lanjutkan?"
+      "Jika dijadikan Triune, datanya akan dihapus dari leaderboard (tercatat di riwayat perubahan). Lanjutkan?"
     )) return;
     q = sb.from("staff").insert({ uid, ...row });
   } else {
     q = sb.from("staff").update(row).eq("uid", editingStaffUid);
   }
   const { error } = await q;
-  if (error) return toast(error.code === "23505" ? `${LABELS.id} sudah terdaftar sebagai staff.` : error.message, true);
+  if (error) return toast(error.code === "23505" ? `${LABELS.id} sudah terdaftar sebagai Triune.` : error.message, true);
 
   $("#staff-dialog").close();
-  toast("Staff tersimpan.");
+  toast("Triune tersimpan.");
   await loadAll();
 });
 
 async function removeStaff(s) {
-  if (!confirm(`Hapus ${s.name} (${s.uid}) dari staff?\n\n${LABELS.id} ini bisa ditambahkan ke leaderboard lagi setelahnya. Kalau hanya berhenti menjabat, ubah Status jadi Deactive.`)) return;
+  if (!confirm(`Hapus ${s.name} (${s.uid}) dari Triune?\n\n${LABELS.id} ini bisa ditambahkan ke leaderboard lagi setelahnya. Kalau hanya berhenti menjabat, ubah Status jadi Deactive.`)) return;
   const { error } = await sb.from("staff").delete().eq("uid", s.uid);
   if (error) return toast(error.message, true);
-  toast("Staff dihapus.");
+  toast("Triune dihapus.");
   await loadAll();
 }
 
@@ -448,7 +448,7 @@ $("#import-btn").addEventListener("click", async () => {
   rows = rows.filter((r) => !blocked.has(r.uid));
   if (!rows.length) return toast("Tidak ada baris valid untuk diimpor.", true);
 
-  const skipNote = skipped.length ? `\n${fmt.format(skipped.length)} baris dilewati karena ${LABELS.id}-nya staff.` : "";
+  const skipNote = skipped.length ? `\n${fmt.format(skipped.length)} baris dilewati karena ${LABELS.id}-nya Triune.` : "";
   if (!confirm(`Impor ${fmt.format(rows.length)} Valtherians? ${LABELS.id} yang sudah ada akan ditimpa.${skipNote}`)) return;
 
   for (let i = 0; i < rows.length; i += 500) {
@@ -457,7 +457,7 @@ $("#import-btn").addEventListener("click", async () => {
   }
   $("#import-text").value = "";
   $("#import-file").value = "";
-  toast(`${fmt.format(rows.length)} Valtherians diimpor.` + (skipped.length ? ` ${fmt.format(skipped.length)} staff dilewati.` : ""));
+  toast(`${fmt.format(rows.length)} Valtherians diimpor.` + (skipped.length ? ` ${fmt.format(skipped.length)} Triune dilewati.` : ""));
   await loadAll();
 });
 
@@ -467,7 +467,7 @@ fillSelect($("#rank-filter"), [["all", "Semua rank"], ...RANKS.map((r) => [r.id,
 $("#rank-filter").addEventListener("change", (ev) => { rankFilter = ev.target.value; renderPlayers(); });
 $("#search").addEventListener("input", (ev) => { search = ev.target.value; renderPlayers(); });
 
-fillSelect($("#staff-filter"), [["all", "Semua jabatan"], ...STAFF_ROLES.map((r) => [r.role, r.role])]);
+fillSelect($("#staff-filter"), [["all", "Semua Posisi"], ...STAFF_ROLES.map((r) => [r.role, r.role])]);
 $("#staff-filter").addEventListener("change", (ev) => { staffFilter = ev.target.value; renderStaff(); });
 $("#staff-search").addEventListener("input", (ev) => { staffSearch = ev.target.value; renderStaff(); });
 
