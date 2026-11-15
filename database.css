@@ -1,5 +1,3 @@
-/* Tambahan khusus halaman Valtherians Database. Dimuat setelah theme.css. */
-
 .sec-title {
   margin: 0; font-family: Cinzel, serif; text-transform: uppercase;
   letter-spacing: .07em; color: var(--gold); font-size: 1.05rem;
@@ -12,7 +10,7 @@
 .total-num { font-family: Cinzel, serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
 .total-sub { color: var(--muted); font-size: .88rem; }
 
-/* ---------- Triune (profil staff) ---------- */
+/* ---------- Triune ---------- */
 .staff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
 .staff-card {
   background: var(--panel-2); border: 1px solid var(--border); border-left: 3px solid var(--gold);
