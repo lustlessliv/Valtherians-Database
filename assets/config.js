@@ -96,3 +96,25 @@ export const WELCOME = {
   repositoryUrl: "", // isi saat halaman Repository sudah ada, mis. "repository/"
   renameCooldownText: "Nama hanya bisa diganti sekali setiap 7 hari.",
 };
+
+export const TRAINING = {
+  kinds: {
+    sistem: "Pengenalan sistem Legion (online)",
+    ekspedisi: "Pelatihan ekspedisi (in-game)",
+  },
+  intro: "Sebelum dinobatkan menjadi Knight of Aldervane, seorang Aspirant wajib mengikuti sesi Training. Training terdiri dari pengenalan sistem Legion secara online dan pelatihan ekspedisi di dalam game.",
+  arbiterTitle: "Pilih Arbiter",
+  arbiterText: "Silakan pilih Arbiter untuk mengajukan status Trainee:",
+  arbiterWarn: "Arbiter yang sudah dipilih hanya bisa diubah oleh Triune.",
+  arbiterEmpty: "Belum ada Arbiter yang aktif. Hubungi Triune, lalu lanjutkan lewat tombol di bawah.",
+  sessionsTitle: "Pilih sesi Training",
+  sessionsText: "Pilih minimal 1 sesi yang dipandu Arbiter-mu. Sesi lain boleh dipilih sesuai keinginanmu.",
+  tip: "Tip: ambil sesi dengan Arbiter yang sama, atau sesi dengan peserta terbanyak.",
+  noSessions: "Belum ada jadwal sesi. Cek lagi nanti, atau hubungi Triune.",
+  requiredOk: "Syarat terpenuhi: kamu sudah ikut sesi bersama Arbiter-mu.",
+  requiredNo: "Syarat belum terpenuhi: pilih minimal 1 sesi bersama Arbiter-mu.",
+  mineBadge: "Arbiter-mu",
+  finishLabel: "Selesai",
+  laterLabel: "Lanjutkan nanti",
+  laterText: "Kamu bisa melanjutkan pemilihan sesi kapan saja lewat kartu \"Lanjutkan Training\" di halaman ini.",
+};
