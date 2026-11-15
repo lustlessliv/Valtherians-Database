@@ -126,7 +126,6 @@ $("#c-filter").addEventListener("change", (ev) => {
   render();
 });
 
-// Muat daftar kode begitu dashboard terbuka (setelah login admin)
 const app = $("#app");
 new MutationObserver(() => { if (!app.hidden) loadCodes(); }).observe(app, { attributes: true, attributeFilter: ["hidden"] });
 if (!app.hidden) loadCodes();
