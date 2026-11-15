@@ -119,7 +119,7 @@ function renderStats() {
   tile("Total Valtherians", players.length + staff.length);
   for (const r of RANKS) tile(r.short, players.filter((p) => rankFor(p.score)?.id === r.id).length, r.color);
   tile(ASPIRANT.short, players.filter((p) => !rankFor(p.score)).length, ASPIRANT.color);
-  tile("Triune (staff)", staff.length, "var(--gold)");
+  tile("Triune", staff.length, "var(--gold)");
 }
 
 /* ---------------------------------------------------------- tabel member */
