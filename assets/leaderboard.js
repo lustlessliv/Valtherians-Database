@@ -131,7 +131,7 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
       await showStatus(out, uid);
       load(); // segarkan leaderboard
     } else if (r?.status === "used") say(out, "error", "Kode ini sudah pernah dipakai.");
-    else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah staff dan tidak bisa menukar kode.`);
+    else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah Triune dan tidak bisa menukar kode.`);
     else if (r?.status === "no_player") say(out, "error", `${LABELS.id} "${uid}" tidak ditemukan.`);
     else say(out, "error", "Kode tidak valid.");
   }
