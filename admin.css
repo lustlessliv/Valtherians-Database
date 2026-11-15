@@ -27,3 +27,4 @@ label.check input[type=checkbox] { flex: none; width: 18px; min-width: 0; height
 
 td.copyable { cursor: pointer; letter-spacing: .03em; }
 td.copyable:hover { color: var(--gold, #d4af37); }
+tr.past { opacity: .5; }
