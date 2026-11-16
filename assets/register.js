@@ -35,11 +35,10 @@ function setMode(next) {
   }
   for (const m of MODES) $(`#${m}-card`).hidden = m !== mode;
   $("#mode-hint").textContent = mode ? "" : TRAINING.tabsHint;
-  // Hero hanya dipakai di layar awal dan Ganti nama
-  const hero = document.querySelector(".hero");
-  if (hero) hero.style.display = mode === "register" || mode === "resume" ? "none" : "";
 }
 setMode(new URLSearchParams(location.search).get("tab") === "resume" ? "resume" : null);
+
+$("#rename-sub").textContent = `Pakai ${LABELS.id} dan ${LABELS.pin}-mu. ${WELCOME.renameCooldownText}`;
 
 /* ---------------------------------------------------------- kartu sambutan */
 
@@ -68,8 +67,9 @@ function linkSection(title, links) {
 async function showDone(uid, name, later = false) {
   const done = $("#done");
   done.replaceChildren();
-  $("#mode-tabs").style.display = "";
   setMode(null);
+  $("#mode-tabs").style.display = "none"; // layar akhir tanpa menu
+  $("#mode-hint").textContent = "";
   const hero = document.querySelector(".hero");
   if (hero) hero.style.display = "none"; // hero tidak dibawa lagi setelah alur dimulai
 
@@ -135,8 +135,6 @@ async function startTraining(me) {
   for (const m of MODES) $(`#${m}-card`).hidden = true;
   $("#mode-tabs").style.display = "none";
   $("#mode-hint").textContent = "";
-  const hero = document.querySelector(".hero");
-  if (hero) hero.style.display = "none";
   box.hidden = false;
 
   const [mine, arbs, sess] = await Promise.all([
@@ -152,6 +150,8 @@ async function startTraining(me) {
     return;
   }
 
+  const heroEl = document.querySelector(".hero");
+  if (heroEl) heroEl.style.display = "none"; // hero hilang setelah ID + Emblem berhasil dimasukkan
   const head = el("section", "card welcome highlight");
   head.append(
     el("h2", "sec-title", me.fresh ? TRAINING.doneTitle : "Lanjutkan Training"),
