@@ -105,9 +105,10 @@ export const WELCOME = {
 export const TRAINING = {
   tabs: { register: "Registrasi", resume: "Lanjutkan Training", rename: "Ganti Nama" },
   tabsHint: "Pilih salah satu di atas untuk memulai.",
+    steps: ["Buat ID", "Jadwal Training", "Eksplor Legion"],
   kinds: {
-    sistem: "Pengenalan sistem Legion (online)",
-    ekspedisi: "Pelatihan ekspedisi (in-game)",
+    sistem: "Sistem",
+    ekspedisi: "Ekspedisi",
   },
   intro: "Sebelum dinobatkan menjadi Knight of Aldervane, seorang Aspirant wajib mengikuti sesi Training. Training terdiri dari pengenalan sistem Legion secara online dan pelatihan ekspedisi di dalam game.",
   title: "Pilih Arbiter dan jadwal Training",
