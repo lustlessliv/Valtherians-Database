@@ -83,6 +83,7 @@ async function showDone(uid, name, later = false) {
   );
   if (later) welcome.append(el("p", "sec-sub", TRAINING.laterText));
   done.append(welcome);
+  done.append(stepper(3, later ? [2] : []));
 
   // ID card pertama kali
   const { member } = await lookupMember(uid);
@@ -143,6 +144,26 @@ function fmtWhen(iso) {
   return `${day}, ${hm} WIB`;
 }
 
+function fmtShort(iso) {
+  const d = new Date(iso);
+  const day = d.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", weekday: "short", day: "numeric", month: "short" });
+  const hm = d.toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hour12: false }).replace(".", ":");
+  return `${day} · ${hm} WIB`;
+}
+
+function stepper(current, skipped = []) {
+  const wrap = el("ol", "steps");
+  TRAINING.steps.forEach((label, i) => {
+    const n = i + 1;
+    const state = n === current ? "active" : n < current && !skipped.includes(n) ? "done" : "todo";
+    const li = el("li", `step ${state}`);
+    if (state === "active") li.setAttribute("aria-current", "step");
+    li.append(el("span", "step-dot", state === "done" ? "✓" : String(n)), el("span", "step-label", label));
+    wrap.append(li);
+  });
+  return wrap;
+}
+
 // Layar Training: kotak atas (sambutan + ID, dibuat lebih terang) dan kartu Arbiter + jadwal.
 async function startTraining(me) {
   const box = $("#done");
@@ -184,7 +205,7 @@ async function startTraining(me) {
   head.append(copy, el("p", "sec-sub", WELCOME.doneText), el("p", "sec-sub", TRAINING.intro));
 
   const step = el("section", "card");
-  box.replaceChildren(head, step);
+  box.replaceChildren(head, stepper(2), step);
   box.scrollIntoView({ behavior: "smooth" });
   renderTraining(step, me, m, arbs.data || [], sess.data || []);
 }
@@ -237,26 +258,25 @@ function renderTraining(step, me, m, arbiters, sessions) {
       if (!rows.length) continue;
       step.append(el("h3", "sub-title", TRAINING.kinds[kind]));
       const blocked = takenTimes(kind);
+      const grid = el("div", "sess-grid");
       for (const s of rows) {
         const isJoined = joined.has(s.id);
         const isOn = chosen[kind] === s.id;
         const clash = !isJoined && !isOn && blocked.includes(new Date(s.starts_at).getTime());
-        const kindFull = !isJoined && !isOn && have[kind]; // jenis ini sudah terdaftar
-        const card = el("div", "session" + (isOn || isJoined ? " picked" : "") + (clash || kindFull ? " blocked" : ""));
-        const top = el("div", "session-top");
-        top.append(el("strong", "", fmtWhen(s.starts_at)));
+        const kindFull = !isJoined && !isOn && have[kind];
+        const state = isJoined ? "Terdaftar" : isOn ? "Dipilih ✓" : clash ? TRAINING.clashLabel : kindFull ? TRAINING.kindDoneLabel : "Pilih";
+        const b = el("button", "sess" + (isOn || isJoined ? " picked" : "") + (clash || kindFull ? " blocked" : ""));
+        b.type = "button";
+        b.disabled = isJoined || clash || kindFull;
+        const top = el("span", "sess-top");
+        top.append(el("strong", "", fmtShort(s.starts_at)));
         if (arb && s.trainer_uid === arb) top.append(el("span", "badge-mine", TRAINING.mineBadge));
-        card.append(top, el("div", "session-sub", `Dipandu ${s.trainer_name}${s.note ? ` • ${s.note}` : ""}`));
-        const people = s.participants || [];
-        card.append(el("div", "session-sub", people.length ? `Peserta (${people.length}): ${people.join(", ")}` : "Belum ada peserta"));
-        const label = isJoined ? "Sudah terdaftar" : isOn ? "Batal pilih" : clash ? TRAINING.clashLabel : kindFull ? TRAINING.kindDoneLabel : "Pilih sesi ini";
-        const btn = el("button", "btn-gold small" + (isOn ? " on" : ""), label);
-        btn.type = "button";
-        btn.disabled = isJoined || clash || kindFull;
-        btn.addEventListener("click", () => { chosen[kind] = isOn ? null : s.id; draw(); });
-        card.append(btn);
-        step.append(card);
+        const n = (s.participants || []).length;
+        b.append(top, el("span", "sess-sub", `${s.trainer_name}${s.note ? ` • ${s.note}` : ""} · ${n} peserta`), el("span", "sess-state", state));
+        b.addEventListener("click", () => { chosen[kind] = isOn ? null : s.id; draw(); });
+        grid.append(b);
       }
+      step.append(grid);
     }
 
     // --- Syarat
