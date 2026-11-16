@@ -93,7 +93,7 @@ async function renderStats(counts, complete) {
   grid.replaceChildren(...cats.map((c) => tile(c, c.id in counts ? fmt.format(counts[c.id]) : "–")));
   if (complete) {
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    $("#member-sub").textContent = `Jumlah Valtherians per rank ${fmt.format(total)} member`;
+    $("#member-sub").textContent = `Jumlah Valtherians per rank`;
     note.textContent = "";
   } else {
     note.textContent = `Jumlah ${LABELS.aspirant} belum tersedia: jalankan supabase-setup.sql di Supabase (lihat README).`;
