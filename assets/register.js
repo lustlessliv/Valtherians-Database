@@ -127,14 +127,14 @@ function crest() {
 const TR_MSG = {
   invalid: `${LABELS.id} atau ${LABELS.pin} tidak cocok.`,
   not_member: `${LABELS.id} tidak ditemukan.`,
-  locked: "Terlalu banyak percobaan salah. Coba lagi beberapa menit lagi.",
+  locked: "Terlalu banyak percobaan salah. Coba kembali beberapa menit lagi.",
   already: "Arbiter sudah dipilih sebelumnya. Hanya Triune yang bisa mengubahnya.",
   bad_arbiter: "Arbiter itu tidak tersedia.",
   no_session: "Ada sesi yang sudah tidak tersedia. Muat ulang jadwal lalu pilih lagi.",
-  need_both: "Kamu harus mengambil kedua jenis sesi.",
-  too_many: "Pilih tepat 1 sesi untuk tiap jenis.",
-  conflict: "Dua sesi yang kamu pilih punya tanggal dan jam yang sama.",
-  need_arbiter: "Minimal satu sesi harus dipandu Arbiter pilihanmu.",
+  need_both: "Kedua sesi harus diambil.",
+  too_many: "Pilih tepat 1 untuk tiap sesi.",
+  conflict: "Dua sesi yang dipilih punya tanggal dan jam yang sama.",
+  need_arbiter: "Minimal 1 sesi harus dipandu Arbiter pilihanmu.",
 };
 
 function fmtWhen(iso) {
@@ -321,7 +321,7 @@ const REG_MSG = {
   used: `${LABELS.pin} ini sudah dipakai.`,
   bad_name: "Nama harus 2 sampai 30 karakter.",
   name_taken: "Nama itu tidak bisa dipakai. Pilih nama lain.",
-  locked: "Terlalu banyak percobaan salah. Coba lagi beberapa menit lagi.",
+  locked: "Terlalu banyak percobaan salah. Coba kembali beberapa menit lagi.",
 };
 
 $("#reg-form").addEventListener("submit", async (ev) => {
@@ -356,8 +356,8 @@ const REN_MSG = {
   not_found: `${LABELS.id} tidak ditemukan.`,
   bad_name: "Nama harus 2 sampai 30 karakter.",
   name_taken: "Nama itu tidak bisa dipakai. Pilih nama lain.",
-  locked: "Terlalu banyak percobaan salah. Coba lagi beberapa menit lagi.",
-  same: "Itu sudah nama kamu sekarang.",
+  locked: "Terlalu banyak percobaan salah. Coba kembali beberapa menit lagi.",
+  same: "Masukkan nama yang berbeda dari saat ini.",
 };
 
 $("#ren-form").addEventListener("submit", async (ev) => {
@@ -366,7 +366,7 @@ $("#ren-form").addEventListener("submit", async (ev) => {
   const uid = $("#ren-uid").value.trim();
   const pin = $("#ren-pin").value.trim();
   const name = $("#ren-name").value.trim();
-  if (!uid || !pin || !name) return say(out, "error", `Isi ${LABELS.id}, ${LABELS.pin}, dan nama baru dulu.`);
+  if (!uid || !pin || !name) return say(out, "error", `Isi ${LABELS.id}, ${LABELS.pin}, dan nama baru terlebih dahulu.`);
   if (!configured) return say(out, "error", "Database belum dikonfigurasi (lihat README).");
 
   const btn = ev.target.querySelector("button");
