@@ -70,6 +70,10 @@ function buildFooter() {
   return f;
 }
 
+const css = document.createElement("link");
+css.rel = "stylesheet";
+css.href = url("refresh.css");
+document.head.append(css);
 const page = document.body.dataset.page;
 const info = PAGES[page] || { title: document.title, sub: "" };
 document.body.prepend(buildNav(page), buildHero(info));
