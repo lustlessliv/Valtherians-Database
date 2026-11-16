@@ -87,6 +87,7 @@ export const STAFF_COLOR = "#d9b84a"; // warna ID card & tag staff
 // Link dengan url kosong tidak ditampilkan.
 export const WELCOME = {
   doneTitle: "Salve! Selamat bergabung",
+  finalText: "Selamat bergabung! Jelajahi berbagai area di Valthera Legion dengan mengunjungi Arx Divina dan WhatsApp/Discord Legion.",
   doneText: "Legion ID kamu sudah dibuat. Simpan Legion ID dan Emblem-mu baik-baik, keduanya dipakai untuk masuk ke berbagai area Legion.",
   joinTitle: "Bergabung dengan komunitas",
   joinLinks: [
