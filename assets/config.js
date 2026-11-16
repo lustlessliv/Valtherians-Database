@@ -49,11 +49,11 @@ export const NAV = [
 
 export const PAGES = {
   leaderboard: {
-    title: "Leaderboard Aldervane",
+    title: "Legionate Leaderboard",
     sub: "Peringkat para pahlawan terbaik. Cari Legion ID untuk melihat jumlah Sigil dan peringkatmu.",
   },
   database: {
-    title: "Valtherians Database",
+    title: "Valthera Legion Database",
     sub: "Catatan resmi para Valtherian. Cari Legion ID untuk melihat ID card.",
   },
   register: {
@@ -61,12 +61,12 @@ export const PAGES = {
     sub: "Valthera Legion menyambutmu. Buat Legion ID-mu untuk memulai perjalanan menuju Imperial Knight.",
   },
   repository: {
-    title: "Repository Member",
+    title: "Valtherian's Repository",
     sub: "Ruang pribadi para Valtherian. Masuk dengan ID dan Emblem-mu.",
   },
   admin: {
     title: "Dashboard Triune",
-    sub: "Kelola catatan Valtherians, Triune, dan Sigil Valthera Legion Leaderboard",
+    sub: "Kelola catatan Valtherians, Triune, dan Sigil Legionate Leaderboard",
     small: true, // hero kecil tanpa logo & banner
   },
 };
@@ -86,7 +86,7 @@ export const STAFF_COLOR = "#d9b84a"; // warna ID card & tag staff
 // ----- Halaman Daftar (tersembunyi: tidak ada di menu, buka lewat alamat /daftar/) -----
 // Link dengan url kosong tidak ditampilkan.
 export const WELCOME = {
-  doneTitle: "Selamat datang di Valthera Legion",
+  doneTitle: "Salve! Selamat bergabung",
   doneText: "Legion ID kamu sudah dibuat. Simpan Legion ID dan Emblem-mu baik-baik, keduanya dipakai untuk masuk ke berbagai area Legion.",
   joinTitle: "Bergabung dengan komunitas",
   joinLinks: [
@@ -107,8 +107,8 @@ export const TRAINING = {
   tabsHint: "Pilih salah satu di atas untuk memulai.",
     steps: ["Buat ID", "Jadwal Training", "Eksplor Legion"],
   kinds: {
-    sistem: "Sistem",
-    ekspedisi: "Ekspedisi",
+    sistem: "Pengenalan Sistem",
+    ekspedisi: "Pelatihan Ekspedisi",
   },
   intro: "Sebelum dinobatkan menjadi Knight of Aldervane, seorang Aspirant wajib mengikuti sesi Training. Training terdiri dari pengenalan sistem Legion secara online dan pelatihan ekspedisi di dalam game.",
   title: "Pilih Arbiter dan jadwal Training",
@@ -117,7 +117,7 @@ export const TRAINING = {
   arbiterFixed: "Arbiter-mu",
   arbiterWarn: "Arbiter yang sudah dipilih hanya bisa diubah oleh Triune.",
   arbiterEmpty: "Belum ada Arbiter yang aktif. Hubungi Triune.",
-  tip: "Tip: ambil sesi dengan Arbiter yang sama, atau sesi dengan peserta terbanyak.",
+  tip: "Tips: ambil sesi dengan Arbiter yang sama, atau sesi dengan peserta terbanyak. Ganti Arbiter jika tidak ada jadwal yang cocok.",
   noSessions: "Belum ada jadwal sesi. Cek lagi nanti, atau hubungi Triune.",
   mineBadge: "Arbiter-mu",
   checks: {
@@ -127,10 +127,10 @@ export const TRAINING = {
     mine: "Salah satunya dipandu Arbiter-mu",
   },
   clashLabel: "Bentrok jadwal",
-  kindDoneLabel: "Jenis ini sudah terdaftar",
-  submitLabel: "Ajukan status Trainee",
+  kindDoneLabel: "Sesi ini sudah terdaftar",
+  submitLabel: "Ajukan Status Trainee",
   saveLabel: "Simpan",
-  laterLabel: "Lanjutkan nanti",
+  laterLabel: "Lanjutkan Nanti",
   laterText: "Kamu bisa melanjutkan pemilihan Arbiter dan jadwal kapan saja lewat tab \"Lanjutkan Training\".",
   doneTitle: "Selamat datang di Valthera Legion",
 };
@@ -143,16 +143,16 @@ export const REPOSITORY = {
   trainingTitle: "Training",
   trainingEmpty: "Belum ada sesi Training yang kamu ikuti.",
   trainingContinue: "Pilih atau lengkapi Training",
-  graphTitle: "Grafik Sigil(s)",
+  graphTitle: "Grafik Sigil",
   graphMaintenance: "Maintenance",
-  graphMaintenanceNote: "Season sedang maintenance. Redeem ditutup sampai season berikutnya dimulai.",
-  staffNote: "Triune tidak masuk leaderboard dan tidak memiliki Sigil(s), jadi grafik Sigil(s) tidak ditampilkan.",
+  graphMaintenanceNote: "Legion sedang maintenance. Redeem ditutup sampai Chronicle II dimulai.",
+  staffNote: "Triune tidak masuk leaderboard dan tidak memiliki Sigil, grafik Sigil tidak ditampilkan.",
   expired: "Sesi login habis. Masuk lagi untuk melanjutkan.",
   scoreTitle: "Skor Training",
   scoreEmpty: "Belum ada data Training.",
   scoreNone: "Belum dinilai",
   scoreDate: "Selesai",
-  uniformTitle: "Uniform",
+  uniformTitle: "Wardrobe",
   uniformText: "Ketuk gambar untuk membuka, atau unduh file PDF-nya.",
   uniformMissing: "Belum tersedia",
   uniformDownload: "Unduh PDF",
