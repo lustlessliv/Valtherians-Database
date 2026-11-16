@@ -1,0 +1,119 @@
+/* refresh.css — palet & layout disamakan dengan web referensi (navy kalem + emas).
+   Dimuat paling akhir oleh layout.js, jadi menimpa theme.css / database.css. */
+
+:root {
+  --bg: #070d1d;
+  --panel: #0f1a36;
+  --panel-2: #142142;
+  --border: #1e2b4b;
+  --text: #e6eaf8;
+  --muted: #a1acca;
+  --gold: #cfae43;
+  --gold-bright: #f0d878;
+  --gold-deep: #77672c;
+  --nav: #0f1a36;
+}
+body { background: var(--bg); }
+
+/* ---------- Navbar ---------- */
+.site-nav { padding: 10px 20px; }
+.nav-links a { color: var(--muted); }
+.nav-links a.active { color: #e5c85a; background: #2f2a14; }
+
+/* ---------- Hero ---------- */
+.hero { padding: 28px 16px 12px; }
+.hero-card {
+  --bw: clamp(46px, 11vw, 96px);
+  padding: 36px calc(var(--bw) + 26px);
+  border-radius: 12px;
+  background: radial-gradient(90% 75% at 50% 0%, #333947 0%, #262d3d 28%, #121a2f 62%, #080f1f 100%);
+}
+.hero-card .banner { top: 20px; }
+.hero-card .banner.left { left: 20px; }
+.hero-card .banner.right { right: 20px; }
+.hero h1 { color: var(--gold-bright); }
+.motto { color: var(--gold); }
+.eyebrow, .hero-card .sub, .hero .sub { color: var(--muted); }
+
+/* ---------- Jarak & pemisah antar bagian ---------- */
+.container { padding-top: 16px; padding-bottom: 56px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; box-shadow: none; }
+.tabs { margin-bottom: 20px; }
+.sec-title, .search label { display: block; padding-bottom: 10px; border-bottom: 1px solid var(--border); color: var(--gold); }
+.sec-sub { margin: 12px 0 16px; color: var(--muted); }
+.sub-title { color: var(--gold); padding-bottom: 6px; border-bottom: 1px solid var(--border); margin: 22px 0 12px; }
+.link-section:first-child .sub-title { margin-top: 0; }
+
+/* Kotak sambutan: lebih kalem, tanpa glow */
+.card.highlight {
+  background: linear-gradient(180deg, #16213f 0%, #0f1a36 100%);
+  border: 1px solid rgba(207, 174, 67, .4);
+  border-radius: 12px;
+  box-shadow: none;
+}
+.card.highlight .sec-title {
+  background: none; -webkit-background-clip: border-box; background-clip: border-box;
+  color: var(--gold-bright); border: 0; padding: 0;
+}
+.card.highlight .hl-logo { filter: none; }
+.hl-rule::after { box-shadow: 0 0 0 3px #101a38; }
+.card.highlight .reg-id {
+  background: linear-gradient(#0a1226, #0a1226) padding-box, linear-gradient(135deg, #e5c85a, #77672c 50%, #e5c85a) border-box;
+}
+
+/* ---------- Tombol & input ---------- */
+.btn-gold, #search-form button, .link, .btn.primary { background: var(--gold-deep); color: #10131f; border: 1px solid #8d7a33; }
+.btn-gold:hover, #search-form button:hover, .link:hover, .btn.primary:hover { background: #8a7633; }
+.btn-ghost { color: var(--gold); border: 1px solid rgba(207, 174, 67, .4); }
+.btn-ghost:hover { background: #142142; }
+.redeem-form input, #search-form input { background: #0b1429; border: 1px solid var(--border); }
+.redeem-form input:focus, #search-form input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.link-btn, .staff-card, .stat-tile { background: var(--panel-2); }
+
+/* ID card & kartu status */
+.idcard, .status-card { background: linear-gradient(160deg, #16224a 0%, #0f1a36 60%, #0a1226 100%); }
+.id-head, .id-foot { background: rgba(0, 0, 0, .25); }
+
+/* ---------- Indikator step ---------- */
+.steps {
+  list-style: none; margin: 0 0 24px; padding: 16px 12px; display: flex;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+}
+.step { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; font-size: .75rem; color: var(--muted); }
+.step::before { content: ""; position: absolute; top: 14px; right: 50%; width: 100%; height: 2px; background: var(--border); }
+.step:first-child::before { display: none; }
+.step.done::before, .step.active::before { background: var(--gold-deep); }
+.step-dot {
+  position: relative; z-index: 1; width: 30px; height: 30px; display: grid; place-items: center;
+  border-radius: 50%; border: 2px solid var(--border); background: var(--bg);
+  font-weight: 600; font-size: .82rem; color: var(--muted);
+}
+.step.done { color: var(--text); }
+.step.done .step-dot { background: var(--gold-deep); border-color: var(--gold-deep); color: #10131f; }
+.step.active { color: var(--gold-bright); }
+.step.active .step-dot { border-color: var(--gold); color: var(--gold-bright); }
+
+/* ---------- Pilih Arbiter & jadwal (compact) ---------- */
+.pick-list { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.pick-item { padding: 8px 12px; border-color: var(--border); }
+.pick-item.on { background: #1b2750; border-color: var(--gold); }
+
+.sess-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; margin-bottom: 8px; }
+.sess {
+  display: grid; grid-template-columns: 1fr auto; grid-template-areas: "top state" "sub state";
+  gap: 2px 10px; align-items: center; padding: 8px 12px; text-align: left; font: inherit; cursor: pointer;
+  color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+}
+.sess > * { min-width: 0; }
+.sess-top { grid-area: top; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .85rem; }
+.sess-sub { grid-area: sub; font-size: .75rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sess-state {
+  grid-area: state; padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  font-size: .72rem; font-weight: 600; color: var(--gold); border: 1px solid rgba(207, 174, 67, .45);
+}
+.sess:hover:not(:disabled) { border-color: var(--gold-deep); }
+.sess.picked { border-color: var(--gold); background: rgba(207, 174, 67, .08); }
+.sess.picked .sess-state { background: var(--gold-deep); border-color: var(--gold-deep); color: #10131f; }
+.sess:disabled { cursor: default; }
+.sess.blocked { opacity: .5; }
+.badge-mine { font-size: .62rem; padding: 1px 7px; }
