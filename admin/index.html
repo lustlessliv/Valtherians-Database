@@ -52,7 +52,7 @@
           <h2>Tambah / kurangi Sigil</h2>
           <form id="adjust-form" class="inline">
             <input id="a-uid" placeholder="ID Valtherian" required />
-            <input id="a-delta" type="number" step="1" placeholder="Jumlah Sigil(s), mis. 150 atau -50" required />
+            <input id="a-delta" type="number" step="1" placeholder="Jumlah Sigil, cth. 150 atau -50" required />
             <button class="btn primary" type="submit">Terapkan</button>
           </form>
         </section>
@@ -85,7 +85,7 @@
             <select id="staff-filter" aria-label="Filter jabatan"></select>
             <button id="staff-add-btn" class="btn primary" type="button">+ Tambah Triune</button>
           </div>
-          <p class="muted small-text">Triune dikelola terpisah dari member: tidak masuk leaderboard dan tidak punya Sigil. ID Triune tetap bisa dicari di halaman Database.</p>
+          <p class="muted small-text">Triune dikelola terpisah dari Legionnaires: tidak masuk leaderboard dan tidak punya Sigil. ID Triune tetap bisa dicari di halaman Database.</p>
           <div class="table-wrap">
             <table>
               <thead>
@@ -114,12 +114,12 @@
           <p class="muted small-text">Emblem dipakai calon Valtherian untuk mendaftar di halaman Registrasi (ID dibuat otomatis). Emblem hanya tampil sekali di bawah, jadi salin dan bagikan segera.</p>
           <form id="pin-form" class="inline">
             <input id="pin-qty" type="number" min="1" max="100" step="1" value="1" required aria-label="Jumlah Emblem" />
-            <input id="pin-note" maxlength="80" placeholder="Catatan (opsional), mis. Angkatan 1" />
+            <input id="pin-note" maxlength="80" placeholder="Catatan (opsional), cth. Angkatan 1" />
             <label class="check"><input id="pin-test" type="checkbox" /> Uji coba</label>
             <button class="btn primary" type="submit">Buat Emblem</button>
           </form>
           <form id="pin-bound-form" class="inline">
-            <input id="pin-uid" placeholder="ID yang sudah ada (member atau Triune)" required />
+            <input id="pin-uid" placeholder="ID yang sudah ada (Legionnaire atau Triune)" required />
             <button class="btn" type="submit">Buat / reset Emblem untuk ID ini</button>
           </form>
           <textarea id="pin-output" rows="4" readonly hidden></textarea>
