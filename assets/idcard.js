@@ -23,6 +23,7 @@ export function buildIdCard(m) {
 
   const card = el("div", "idcard");
   card.style.setProperty("--c", color);
+  card.dataset.mark = (isStaff ? staffTag(m) : rank.name || rank.short).trim().charAt(0).toUpperCase();
 
   const head = el("div", "id-head");
   const logo = el("img", "id-logo");
@@ -56,11 +57,6 @@ export function buildIdCard(m) {
   if (m.joined_at) grid.append(field("Bergabung", fmtDate(m.joined_at)));
 
   card.append(head, body, grid);
-
-  if (!isStaff && !m.rank_id) {
-    const need = Math.max(0, KNIGHT.min - m.score);
-    card.append(el("div", "id-progress", `${fmt.format(need)} ${LABELS.points} lagi untuk dinobatkan sebagai ${KNIGHT.name}.`));
-  }
 
   if (m.achievements?.length) {
     const extra = el("div", "id-extra");
