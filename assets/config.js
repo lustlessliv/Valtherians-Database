@@ -42,9 +42,9 @@ export const RANKUP = {
 export const NAV = [
   { key: "database",    label: "Database",    href: "database/" },
   { key: "leaderboard", label: "Leaderboard", href: "" },
-  { key: "register",    label: "Daftar",      href: "daftar/", hidden: true }, // hanya tampil di halamannya sendiri
-  { key: "admin",       label: "Triune",      href: "admin/", hidden: true },
   { key: "repository",  label: "Repository",  href: "repository/" },
+  { key: "register",    label: "Registration",      href: "daftar/" },
+  { key: "admin",       label: "Triune",      href: "admin/", hidden: true },
 ];
 
 export const PAGES = {
@@ -145,4 +145,21 @@ export const REPOSITORY = {
   graphMaintenanceNote: "Season sedang maintenance. Redeem ditutup sampai season berikutnya dimulai.",
   staffNote: "Triune tidak masuk leaderboard dan tidak memiliki Sigil(s), jadi grafik Sigil(s) tidak ditampilkan.",
   expired: "Sesi login habis. Masuk lagi untuk melanjutkan.",
+  scoreTitle: "Skor Training",
+  scoreEmpty: "Belum ada data Training.",
+  scoreNone: "Belum dinilai",
+  scoreDate: "Selesai",
+  uniformTitle: "Uniform",
+  uniformText: "Ketuk gambar untuk membuka, atau unduh file PDF-nya.",
+  uniformMissing: "Belum tersedia",
+  uniformDownload: "Unduh PDF",
+  uniformFail: "File tidak bisa dibuka. Coba lagi nanti.",
 };
+
+export const UNIFORMS = [
+  { id: "aspirant", rank: "Aspirant",                 name: "Wayfarer's Raiment",   image: "uniform/aspirant.png" },
+  { id: "knight",   rank: "I. Knight of Aldervane",   name: "Valtherian's Aegis",   image: "uniform/knight.png" },
+  { id: "sentinel", rank: "I. Sentinel of Aldervane", name: "",                     image: "uniform/sentinel.png" },
+  { id: "praefect", rank: "I. Praefect of Aldervane", name: "",                     image: "uniform/praefect.png" },
+  { id: "triune",   rank: "Triune",                   name: "",                     image: "uniform/triune.png" },
+];
