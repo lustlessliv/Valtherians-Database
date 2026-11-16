@@ -375,7 +375,7 @@ $("#staff-form").addEventListener("submit", async (ev) => {
   if (editingStaffUid === null) {
     const asMember = players.find((p) => p.uid === uid);
     if (asMember && !confirm(
-      `${LABELS.id} ${uid} (${asMember.name}) masih terdaftar sebagai member dengan ${fmt.format(asMember.score)} ${LABELS.points}.\n\n` +
+      `${LABELS.id} ${uid} (${asMember.name}) masih terdaftar sebagai Legionnare dengan ${fmt.format(asMember.score)} ${LABELS.points}.\n\n` +
       "Kalau dijadikan Triune, datanya dihapus dari leaderboard (tercatat di riwayat perubahan). Lanjutkan?"
     )) return;
     q = sb.from("staff").insert({ uid, ...row });
@@ -515,7 +515,7 @@ fillSelect($("#rank-filter"), [["all", "Semua rank"], ...RANKS.map((r) => [r.id,
 $("#rank-filter").addEventListener("change", (ev) => { rankFilter = ev.target.value; page = 1; renderPlayers(); });
 $("#search").addEventListener("input", (ev) => { search = ev.target.value; page = 1; renderPlayers(); });
 
-fillSelect($("#staff-filter"), [["all", "Semua jabatan"], ...STAFF_ROLES.map((r) => [r.role, r.role])]);
+fillSelect($("#staff-filter"), [["all", "Semua posisi"], ...STAFF_ROLES.map((r) => [r.role, r.role])]);
 $("#staff-filter").addEventListener("change", (ev) => { staffFilter = ev.target.value; renderStaff(); });
 $("#staff-search").addEventListener("input", (ev) => { staffSearch = ev.target.value; renderStaff(); });
 
