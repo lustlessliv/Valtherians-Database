@@ -70,8 +70,8 @@ function renderTotal(counts, staffRes) {
   // Semua divisi Segate dihitung sebagai "Segate".
   const perRole = STAFF_ROLES.map((r) => `${r.role} ${fmt.format(staffRes.staff.filter((s) => s.role === r.role).length)}`).join(" · ");
   sub.textContent = staffRes.error
-    ? `${fmt.format(members)} member`
-    : `${fmt.format(members)} member + ${fmt.format(staffCount)} Triune (${perRole})`;
+    ? `${fmt.format(members)} Legionnaires`
+    : `${fmt.format(members)} Legionnaires + ${fmt.format(staffCount)} Triune (${perRole})`;
 }
 
 async function renderStats(counts, complete) {
