@@ -12,6 +12,7 @@
     <script type="module" crossorigin src="../assets/admin-codes.js"></script>
     <script type="module" crossorigin src="../assets/admin-pins.js"></script>
     <script type="module" crossorigin src="../assets/admin-training.js"></script>
+    <script type="module" crossorigin src="../assets/admin-uniform.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/shared-BhyKLrjU.js">
     <link rel="stylesheet" crossorigin href="../assets/shared-FCsielAh.css">
     <link rel="stylesheet" crossorigin href="../assets/admin-DD2leoxZ.css">
@@ -162,6 +163,7 @@
             </table>
           </div>
           <p id="train-note" class="muted small-text"></p>
+          <div id="score-panel" class="score-panel" hidden></div>
 
           <h2>Arbiter member</h2>
           <p class="muted small-text">Member memilih Arbiter sendiri satu kali. Perubahan setelahnya hanya lewat sini.</p>
@@ -174,6 +176,13 @@
           <p id="arb-out" class="muted small-text"></p>
         </section>
 
+        <section class="card" id="uniform-card">
+          <h2>Uniform</h2>
+          <p class="muted small-text">Unggah file PDF tiap uniform (maks. 8 MB). File hanya bisa dibuka member yang login di Repository dan rank-nya cukup. Mengunggah lagi akan mengganti file lama.</p>
+          <div id="uniform-list"></div>
+          <p id="uniform-note" class="muted small-text"></p>
+        </section>
+        
         <section class="card" id="codes-card">
           <h2>Kode redeem</h2>
           <p class="muted small-text">Tiap kode hanya bisa dipakai satu kali dan menambah Sigil(s) ke ID yang memakainya. Kosongkan kolom kode sendiri kalau mau dibuatkan acak.</p>
