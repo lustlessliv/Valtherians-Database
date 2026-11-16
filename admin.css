@@ -28,3 +28,9 @@ label.check input[type=checkbox] { flex: none; width: 18px; min-width: 0; height
 td.copyable { cursor: pointer; letter-spacing: .03em; }
 td.copyable:hover { color: var(--gold, #d4af37); }
 tr.past { opacity: .5; }
+
+.score-panel { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; display: grid; gap: 8px; }
+.score-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.score-row input { width: 90px; }
+.uniform-admin { padding: 10px 0; border-top: 1px solid var(--border); display: grid; gap: 6px; }
+.uniform-admin-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
