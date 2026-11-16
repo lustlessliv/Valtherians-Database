@@ -120,30 +120,54 @@ function render(d) {
   const isMember = d.kind === "member";
   const rank = isMember ? rankFor(d.score) || ASPIRANT : null;
 
-  // --- Profil (kotak atas, lebih terang)
-  const head = el("section", "card highlight");
-  head.append(el("h2", "sec-title", T.profileTitle), el("p", "welcome-name", d.name));
-  const tag = isMember ? pill(rank.name || rank.short, rank.color) : pill(staffTag(d), STAFF_COLOR);
-  const facts = el("div", "repo-facts");
-  facts.append(fact(LABELS.id, d.uid), fact("Rank", tag));
-  if (isMember) facts.append(fact(LABELS.pointsColumn, fmt.format(d.score)));
-  else facts.append(fact("Status", d.active ? "Active" : "Deactive"));
+  // --- Profil: kartu berwarna sesuai rank saat ini
+  const color = isMember ? rank.color : STAFF_COLOR;
+  const rankName = isMember ? rank.name || rank.short : staffTag(d);
+  const head = el("section", "pcard");
+  head.style.setProperty("--rc", color);
+  head.dataset.mark = rankName.trim().charAt(0).toUpperCase();
+
+  const top = el("div", "pcard-head");
+  top.append(el("span", "pcard-kicker", T.profileTitle), el("span", "pcard-rank", rankName));
+  head.append(top, el("h2", "pcard-name", d.name));
+  const idRow = el("div", "pcard-idrow");
+  idRow.append(el("span", "pcard-id-label", LABELS.id), el("span", "pcard-id", d.uid));
+  head.append(idRow);
+
+  if (isMember) {
+    const sig = el("div", "pcard-sigil");
+    sig.append(el("span", "pcard-num", fmt.format(d.score)), el("span", "pcard-unit", LABELS.points));
+    head.append(sig);
+    const i = RANKS.findIndex((r) => d.score >= r.min);
+    const next = i === -1 ? RANKS[RANKS.length - 1] : i > 0 ? RANKS[i - 1] : null;
+    const from = i === -1 ? 0 : RANKS[i].min;
+    const bar = el("div", "pcard-bar");
+    const fill = el("div", "pcard-fill");
+    fill.style.width = `${next ? Math.min(100, Math.max(3, ((d.score - from) / (next.min - from)) * 100)) : 100}%`;
+    bar.append(fill);
+    head.append(bar, el("div", "pcard-next", next ? `${fmt.format(next.min - d.score)} ${LABELS.points} lagi menuju ${next.name || next.short}` : "Rank tertinggi tercapai"));
+  }
+
+  const facts = el("div", "pcard-facts");
   facts.append(fact("Bergabung", d.joined_at ? fmtDayLong(d.joined_at) : "-"));
   if (isMember) facts.append(fact("Arbiter", d.arbiter || "Belum dipilih"));
+  else facts.append(fact("Status", d.active ? "Active" : "Deactive"));
   head.append(facts);
-  if (d.title) head.append(el("p", "sec-sub", d.title));
+  if (d.title) head.append(el("p", "pcard-title", d.title));
   const ach = d.achievements || [];
   if (ach.length) {
-    const chips = el("div", "chips");
-    chips.append(...ach.map((a) => el("span", "chip", a)));
-    head.append(el("h3", "sub-title", "Insignia"), chips);
+    const chips = el("div", "pcard-chips");
+    chips.append(...ach.map((a) => el("span", "pcard-chip", a)));
+    head.append(el("div", "pcard-label", "Insignia"), chips);
   }
   root.append(head);
 
   if (isMember) {
-    root.append(rank.id === ASPIRANT.id ? trainingCard(d) : scoreCard(d));
+    const isAspirant = rank.id === ASPIRANT.id;
+    if (isAspirant) root.append(trainingCard(d)); // jadwal penting: tetap di atas
     root.append(graphCard(d));
     root.append(uniformCard());
+    if (!isAspirant) root.append(scoreCard(d)); // skor Training di paling bawah
   } else {
     const note = el("section", "card");
     note.append(el("p", "sec-sub", T.staffNote));
