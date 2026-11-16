@@ -2,7 +2,7 @@
 // Fungsi database: member_login, member_logout, repo_data (lihat supabase-repository.sql).
 import "./layout.js";
 import { configured, el, sb, fmt, RANKS, rankFor } from "./lib.js";
-import { LABELS, REPOSITORY as T, STAFF_COLOR, TRAINING } from "./config.js";
+import { LABELS, REPOSITORY as T, STAFF_COLOR, TRAINING, UNIFORMS } from "./config.js";
 import { ASPIRANT, staffTag } from "./api.js";
 
 const $ = (q) => document.querySelector(q);
@@ -141,12 +141,14 @@ function render(d) {
   root.append(head);
 
   if (isMember) {
-    root.append(trainingCard(d));
+    root.append(rank.id === ASPIRANT.id ? trainingCard(d) : scoreCard(d));
     root.append(graphCard(d));
+    root.append(uniformCard());
   } else {
     const note = el("section", "card");
     note.append(el("p", "sec-sub", T.staffNote));
     root.append(note);
+    root.append(uniformCard());
   }
 
   // --- Sesi login
@@ -183,6 +185,92 @@ function trainingCard(d) {
     card.append(a);
   }
   return card;
+}
+
+/* ---------------------------------------------------------- skor training (untuk Knight ke atas) */
+
+function scoreCard(d) {
+  const card = el("section", "card");
+  card.append(el("h2", "sec-title", T.scoreTitle));
+  const rows = d.sessions || [];
+  if (!rows.length) card.append(el("p", "sec-sub", T.scoreEmpty));
+  for (const s of rows) {
+    const row = el("div", "session");
+    const top = el("div", "session-top");
+    top.append(el("strong", "", TRAINING.kinds[s.kind] || s.kind));
+    top.append(el("span", s.score == null ? "score-none" : "score-badge", s.score == null ? T.scoreNone : String(s.score)));
+    const day = new Date(s.starts_at).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "long" });
+    row.append(top, el("div", "session-sub", `${T.scoreDate} ${day} • ${s.trainer}`));
+    card.append(row);
+  }
+  return card;
+}
+
+/* ---------------------------------------------------------- uniform */
+
+function uniformCard() {
+  const card = el("section", "card");
+  card.append(el("h2", "sec-title", T.uniformTitle), el("p", "sec-sub", T.uniformText));
+  const grid = el("div", "uniform-grid");
+  card.append(grid);
+  const out = el("div");
+  card.append(out);
+
+  (async () => {
+    const { data } = await sb.rpc("repo_uniforms", { p_token: store.get() });
+    const mine = new Map((data || []).map((u) => [u.id, u]));
+    for (const u of UNIFORMS) {
+      const info = mine.get(u.id);
+      if (!info) continue; // belum waktunya diakses
+      const box = el("div", "uniform" + (info.has_file ? "" : " off"));
+      const pic = el("button", "uniform-pic");
+      pic.type = "button";
+      pic.disabled = !info.has_file;
+      if (u.image) {
+        const img = new Image();
+        img.alt = u.rank;
+        img.loading = "lazy";
+        img.src = new URL("../" + u.image, import.meta.url).href;
+        img.addEventListener("error", () => img.remove());
+        pic.append(img);
+      }
+      const cap = el("div", "uniform-cap");
+      cap.append(el("div", "uniform-rank", u.rank), el("div", "uniform-name", info.has_file ? u.name || "\u00a0" : T.uniformMissing));
+      pic.append(cap);
+      pic.addEventListener("click", () => openUniform(u.id, false, out));
+      box.append(pic);
+      if (info.has_file) {
+        const dl = el("button", "btn-ghost small", T.uniformDownload);
+        dl.type = "button";
+        dl.addEventListener("click", () => openUniform(u.id, true, out));
+        box.append(dl);
+      }
+      grid.append(box);
+    }
+  })();
+  return card;
+}
+
+async function openUniform(id, download, out) {
+  out.replaceChildren();
+  const win = download ? null : window.open("", "_blank"); // dibuka dulu supaya tidak diblokir browser
+  const { data, error } = await sb.rpc("repo_uniform_file", { p_token: store.get(), p_id: id });
+  if (error || !data) {
+    win?.close();
+    return say(out, "error", T.uniformFail);
+  }
+  const bin = atob(data.data);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+  if (win) { win.location.href = url; return; }
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = data.file_name || "uniform.pdf";
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
 /* ---------------------------------------------------------- grafik Sigil(s) */
