@@ -117,3 +117,22 @@ body { background: var(--bg); }
 .sess:disabled { cursor: default; }
 .sess.blocked { opacity: .5; }
 .badge-mine { font-size: .62rem; padding: 1px 7px; }
+
+/* ---------- ID card: tekstur halus + cap inisial rank/posisi (khusus ID card) ---------- */
+.idcard {
+  position: relative;
+  background:
+    linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .05) 50%, transparent 62%),
+    url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url%28%23n%29%22 opacity=%22.07%22/%3E%3C/svg%3E"),
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--c) 20%, transparent), transparent 60%),
+    linear-gradient(160deg, #16224a 0%, #0f1a36 60%, #0a1226 100%);
+}
+.idcard::after {
+  content: attr(data-mark); position: absolute; right: 8px; bottom: 6px; z-index: 0;
+  font-family: Cinzel, serif; font-size: 7.5rem; line-height: 1; color: var(--c); opacity: .1; pointer-events: none;
+}
+.idcard > * { position: relative; z-index: 1; }
+
+/* ---------- Uniform: kalau sudah ada gambar, tanpa background garis-garis ---------- */
+.uniform.off .uniform-pic:has(img) { background: #101a3d; }
+
