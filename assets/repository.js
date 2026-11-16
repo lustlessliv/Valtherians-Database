@@ -41,7 +41,7 @@ $("#lg-pin").addEventListener("input", (ev) => { ev.target.value = ev.target.val
 
 const LOGIN_MSG = {
   invalid: `${LABELS.id} atau ${LABELS.pin} tidak cocok.`,
-  locked: "Terlalu banyak percobaan salah. Coba lagi beberapa menit lagi.",
+  locked: "Terlalu banyak percobaan salah. Coba kembali beberapa menit lagi.",
 };
 
 $("#login-form").addEventListener("submit", async (ev) => {
@@ -374,7 +374,7 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   const y = (v) => m.t + ih - (v / yMax) * ih;
 
   const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img",
-    "aria-label": `Grafik Sigil(s) per hari, dari ${pts[0]?.v ?? 0} menjadi ${pts[pts.length - 1]?.v ?? 0}` });
+    "aria-label": `Grafik Sigil per hari, dari ${pts[0]?.v ?? 0} menjadi ${pts[pts.length - 1]?.v ?? 0}` });
 
   const defs = svg("defs");
   const pat = svg("pattern", { id: "maint", width: 8, height: 8, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" });
