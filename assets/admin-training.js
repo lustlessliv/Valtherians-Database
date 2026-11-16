@@ -30,7 +30,7 @@ function fillSelect(sel, rows, placeholder) {
 async function load() {
   const [st, se] = await Promise.all([
     sb.from("staff").select("uid,name,role,division,active").eq("active", true).order("name"),
-    sb.from("training_sessions").select("id,kind,trainer_uid,starts_at,note,training_signups(uid)")
+    sb.from("training_sessions").select("id,kind,trainer_uid,starts_at,note,training_signups(uid,score)")
       .order("starts_at", { ascending: false }).limit(80),
   ]);
   if (st.error || se.error) {
@@ -46,7 +46,8 @@ async function load() {
   body.replaceChildren();
   const now = Date.now();
   for (const s of se.data) {
-    const people = (s.training_signups || []).map((x) => x.uid);
+    const signups = s.training_signups || [];
+    const people = signups.map((x) => x.uid);
     const tr = el("tr");
     if (new Date(s.starts_at) < now) tr.className = "past";
     const del = el("button", "btn small danger", "Hapus");
@@ -62,6 +63,12 @@ async function load() {
       load();
     });
     const act = el("td");
+    if (people.length) {
+      const grade = el("button", "btn small", "Skor");
+      grade.type = "button";
+      grade.addEventListener("click", () => openScores(s, signups));
+      act.append(grade, " ");
+    }
     act.append(del);
     tr.append(
       el("td", "", fmtWhen(s.starts_at)),
@@ -74,6 +81,45 @@ async function load() {
     body.append(tr);
   }
   $("#train-note").textContent = se.data.length ? "Sesi yang sudah lewat tampil redup." : "Belum ada sesi.";
+}
+
+// Panel skor: isi nilai 0-100 tiap peserta sesi
+async function openScores(session, signups) {
+  const panel = $("#score-panel");
+  panel.hidden = false;
+  panel.replaceChildren(el("h3", "", `Skor sesi ${TRAINING.kinds[session.kind] || session.kind} · ${fmtWhen(session.starts_at)}`));
+  const { data: names } = await sb.from("players").select("uid,name").in("uid", signups.map((x) => x.uid));
+  const nameOf = new Map((names || []).map((n) => [n.uid, n.name]));
+  const inputs = [];
+  for (const sg of signups) {
+    const row = el("div", "score-row");
+    const inp = el("input");
+    inp.type = "number"; inp.min = 0; inp.max = 100; inp.inputMode = "numeric";
+    inp.value = sg.score ?? "";
+    inp.placeholder = "0-100";
+    inputs.push([sg.uid, inp]);
+    row.append(el("span", "", `${sg.uid} · ${nameOf.get(sg.uid) || "?"}`), inp);
+    panel.append(row);
+  }
+  const save = el("button", "btn primary", "Simpan skor");
+  save.type = "button";
+  save.addEventListener("click", async () => {
+    save.disabled = true;
+    let failed = null;
+    for (const [uid, inp] of inputs) {
+      const v = inp.value.trim() === "" ? null : Number(inp.value);
+      if (v !== null && !(v >= 0 && v <= 100)) { failed = `Skor ${uid} harus 0 sampai 100.`; break; }
+      const { error } = await sb.from("training_signups").update({ score: v }).eq("session_id", session.id).eq("uid", uid);
+      if (error) { failed = error.message; break; }
+    }
+    save.disabled = false;
+    if (failed) return toast(failed, true);
+    toast("Skor disimpan.");
+    panel.hidden = true;
+    load();
+  });
+  panel.append(save);
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 $("#train-form").addEventListener("submit", async (ev) => {
