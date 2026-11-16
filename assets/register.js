@@ -1,7 +1,7 @@
 // Halaman Daftar (tersembunyi): nama + Emblem -> ID otomatis, kartu sambutan, dan ganti nama.
 import "./layout.js";
 import { configured, el, sb } from "./lib.js";
-import { LABELS, WELCOME, TRAINING } from "./config.js";
+import { LABELS, WELCOME, TRAINING, SITE } from "./config.js";
 import { lookupMember } from "./api.js";
 import { buildIdCard } from "./idcard.js";
 
@@ -75,7 +75,9 @@ async function showDone(uid, name, later = false) {
 
   const welcome = el("section", "card welcome highlight");
   welcome.append(
+    crest(),
     el("h2", "sec-title", TRAINING.doneTitle),
+    el("div", "hl-rule"),
     el("p", "welcome-name", name),
     el("p", "sec-sub", WELCOME.doneText)
   );
@@ -111,6 +113,16 @@ async function showDone(uid, name, later = false) {
 
 /* ---------------------------------------------------------- training */
 
+// Logo kecil di kotak sambutan
+function crest() {
+  const img = new Image();
+  img.className = "hl-logo";
+  img.alt = "";
+  img.src = new URL("../" + SITE.logo, import.meta.url).href;
+  img.addEventListener("error", () => img.remove());
+  return img;
+}
+
 const TR_MSG = {
   invalid: `${LABELS.id} atau ${LABELS.pin} tidak cocok.`,
   not_member: `${LABELS.id} tidak ditemukan.`,
@@ -119,6 +131,8 @@ const TR_MSG = {
   bad_arbiter: "Arbiter itu tidak tersedia.",
   no_session: "Ada sesi yang sudah tidak tersedia. Muat ulang jadwal lalu pilih lagi.",
   need_both: "Kamu harus mengambil kedua jenis sesi.",
+  too_many: "Pilih tepat 1 sesi untuk tiap jenis.",
+  conflict: "Dua sesi yang kamu pilih punya tanggal dan jam yang sama.",
   need_arbiter: "Minimal satu sesi harus dipandu Arbiter pilihanmu.",
 };
 
@@ -154,7 +168,9 @@ async function startTraining(me) {
   if (heroEl) heroEl.style.display = "none"; // hero hilang setelah ID + Emblem berhasil dimasukkan
   const head = el("section", "card welcome highlight");
   head.append(
+    crest(),
     el("h2", "sec-title", me.fresh ? TRAINING.doneTitle : "Lanjutkan Training"),
+    el("div", "hl-rule"),
     el("p", "welcome-name", me.name || ""),
     el("div", "reg-id-label", `${LABELS.id} kamu`),
     el("div", "reg-id", me.uid)
@@ -174,11 +190,22 @@ async function startTraining(me) {
 }
 
 // Satu layar: pilih Arbiter + jadwal, lalu "Ajukan status Trainee".
+// Aturan: tepat 1 sesi tiap jenis, salah satunya dipandu Arbiter pilihan, dan tanggal & jam tidak boleh sama.
 function renderTraining(step, me, m, arbiters, sessions) {
   const joined = new Set(m.session_ids || []);
-  const chosen = new Set();      // sesi yang dipilih di layar ini (belum disimpan)
+  const chosen = { sistem: null, ekspedisi: null }; // satu sesi per jenis (belum disimpan)
+  const have = { sistem: !!m.has_sistem, ekspedisi: !!m.has_ekspedisi }; // jenis yang sudah terdaftar
   let arb = m.arbiter_uid || null;
   const out = el("div");
+
+  const byId = new Map(sessions.map((s) => [s.id, s]));
+  // waktu mulai semua sesi yang sudah dipilih / sudah terdaftar (untuk blokir bentrok)
+  const takenTimes = (exceptKind) => {
+    const times = [];
+    for (const id of joined) { const s = byId.get(id); if (s) times.push(s.starts_at); }
+    for (const k of Object.keys(chosen)) if (k !== exceptKind && chosen[k]) times.push(byId.get(chosen[k])?.starts_at);
+    return times.map((x) => new Date(x).getTime());
+  };
 
   function draw() {
     step.replaceChildren(el("h2", "sec-title", TRAINING.title), el("p", "sec-sub", TRAINING.rules));
@@ -209,32 +236,36 @@ function renderTraining(step, me, m, arbiters, sessions) {
       const rows = sessions.filter((s) => s.kind === kind);
       if (!rows.length) continue;
       step.append(el("h3", "sub-title", TRAINING.kinds[kind]));
+      const blocked = takenTimes(kind);
       for (const s of rows) {
         const isJoined = joined.has(s.id);
-        const isOn = chosen.has(s.id);
-        const card = el("div", "session" + (isOn || isJoined ? " picked" : ""));
+        const isOn = chosen[kind] === s.id;
+        const clash = !isJoined && !isOn && blocked.includes(new Date(s.starts_at).getTime());
+        const kindFull = !isJoined && !isOn && have[kind]; // jenis ini sudah terdaftar
+        const card = el("div", "session" + (isOn || isJoined ? " picked" : "") + (clash || kindFull ? " blocked" : ""));
         const top = el("div", "session-top");
         top.append(el("strong", "", fmtWhen(s.starts_at)));
         if (arb && s.trainer_uid === arb) top.append(el("span", "badge-mine", TRAINING.mineBadge));
         card.append(top, el("div", "session-sub", `Dipandu ${s.trainer_name}${s.note ? ` • ${s.note}` : ""}`));
         const people = s.participants || [];
         card.append(el("div", "session-sub", people.length ? `Peserta (${people.length}): ${people.join(", ")}` : "Belum ada peserta"));
-        const btn = el("button", "btn-gold small" + (isOn ? " on" : ""), isJoined ? "Sudah terdaftar" : isOn ? "Batal pilih" : "Pilih sesi ini");
+        const label = isJoined ? "Sudah terdaftar" : isOn ? "Batal pilih" : clash ? TRAINING.clashLabel : kindFull ? TRAINING.kindDoneLabel : "Pilih sesi ini";
+        const btn = el("button", "btn-gold small" + (isOn ? " on" : ""), label);
         btn.type = "button";
-        btn.disabled = isJoined;
-        btn.addEventListener("click", () => { isOn ? chosen.delete(s.id) : chosen.add(s.id); draw(); });
+        btn.disabled = isJoined || clash || kindFull;
+        btn.addEventListener("click", () => { chosen[kind] = isOn ? null : s.id; draw(); });
         card.append(btn);
         step.append(card);
       }
     }
 
     // --- Syarat
-    const has = (fn) => sessions.some((s) => chosen.has(s.id) && fn(s));
+    const picked = Object.values(chosen).filter(Boolean).map((id) => byId.get(id));
     const ok = {
       arbiter: !!arb,
-      sistem: m.has_sistem || has((s) => s.kind === "sistem"),
-      ekspedisi: m.has_ekspedisi || has((s) => s.kind === "ekspedisi"),
-      mine: !!arb && (m.has_arbiter_session || has((s) => s.trainer_uid === arb)),
+      sistem: have.sistem || !!chosen.sistem,
+      ekspedisi: have.ekspedisi || !!chosen.ekspedisi,
+      mine: !!arb && (m.has_arbiter_session || picked.some((s) => s.trainer_uid === arb)),
     };
     const list = el("ul", "checklist");
     for (const k of Object.keys(TRAINING.checks)) list.append(el("li", ok[k] ? "yes" : "no", `${ok[k] ? "✓" : "○"} ${TRAINING.checks[k]}`));
@@ -246,7 +277,7 @@ function renderTraining(step, me, m, arbiters, sessions) {
     submit.disabled = !all;
     submit.addEventListener("click", async () => {
       submit.disabled = true;
-      const { data, error } = await sb.rpc("apply_trainee", { p_uid: me.uid, p_pin: me.pin, p_arbiter: arb, p_sessions: [...chosen] });
+      const { data, error } = await sb.rpc("apply_trainee", { p_uid: me.uid, p_pin: me.pin, p_arbiter: arb, p_sessions: picked.map((s) => s.id) });
       if (error || data !== "ok") {
         submit.disabled = false;
         return say(out, "error", TR_MSG[data] || "Terjadi kesalahan, coba lagi nanti.");
