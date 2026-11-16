@@ -90,12 +90,12 @@ export const WELCOME = {
   doneText: "Legion ID kamu sudah dibuat. Simpan Legion ID dan Emblem-mu baik-baik, keduanya dipakai untuk masuk ke berbagai area Legion.",
   joinTitle: "Bergabung dengan komunitas",
   joinLinks: [
-    { label: "WhatsApp", url: "" },
-    { label: "Discord", url: "" },
+    { label: "WhatsApp", url: "#" },
+    { label: "Discord", url: "#" },
   ],
   infoTitle: "Informasi Legion",
   infoLinks: [
-    // { label: "Nama website", url: "https://...", desc: "Penjelasan singkat (opsional)" },
+    { label: "Arx Divina", url: "#", desc: "Pusat informasi Valthera Legion" },
   ],
   repositoryLabel: "Cek Valtherian's Repository",
   repositoryUrl: "repository/", // isi saat halaman Repository sudah ada, mis. "repository/"
