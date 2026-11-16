@@ -79,7 +79,7 @@ async function showDone(uid, name, later = false) {
     el("h2", "sec-title", TRAINING.doneTitle),
     el("div", "hl-rule"),
     el("p", "welcome-name", name),
-    el("p", "sec-sub", WELCOME.doneText)
+    el("p", "sec-sub", WELCOME.finalText)
   );
   if (later) welcome.append(el("p", "sec-sub", TRAINING.laterText));
   done.append(welcome);
@@ -202,7 +202,7 @@ async function startTraining(me) {
     try { await navigator.clipboard.writeText(me.uid); copy.textContent = "Tersalin"; }
     catch { copy.textContent = `${LABELS.id}: ${me.uid}`; }
   });
-  head.append(copy, el("p", "sec-sub", WELCOME.doneText), el("p", "sec-sub", TRAINING.intro));
+  head.append(copy, el("p", "sec-sub", WELCOME.doneText));
 
   const step = el("section", "card");
   box.replaceChildren(head, stepper(2), step);
@@ -229,7 +229,7 @@ function renderTraining(step, me, m, arbiters, sessions) {
   };
 
   function draw() {
-    step.replaceChildren(el("h2", "sec-title", TRAINING.title), el("p", "sec-sub", TRAINING.rules));
+    step.replaceChildren(el("h2", "sec-title", TRAINING.title), el("p", "sec-sub", TRAINING.intro), el("p", "sec-sub", TRAINING.rules));
 
     // --- Arbiter
     step.append(el("h3", "sub-title", TRAINING.arbiterLabel));
