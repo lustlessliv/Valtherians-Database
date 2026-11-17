@@ -2,6 +2,7 @@
 // Tabel: training_sessions, training_signups, trainee_arbiter (lihat supabase-training.sql).
 import { sb, el } from "./lib.js";
 import { LABELS, TRAINING } from "./config.js";
+import { logAction } from "./adminlog.js";
 
 const $ = (q) => document.querySelector(q);
 let tm;
@@ -60,6 +61,7 @@ async function load() {
       const { error } = await sb.from("training_sessions").delete().eq("id", s.id);
       if (error) return toast(error.message, true);
       toast("Sesi dihapus.");
+      logAction("training", `Hapus sesi ${TRAINING.kinds[s.kind] || s.kind} (${new Date(s.starts_at).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })})`);
       load();
     });
     const act = el("td");
@@ -115,6 +117,7 @@ async function openScores(session, signups) {
     save.disabled = false;
     if (failed) return toast(failed, true);
     toast("Skor disimpan.");
+    logAction("training", `Ubah skor sesi ${TRAINING.kinds[session.kind] || session.kind || ""}`.trim());
     panel.hidden = true;
     load();
   });
@@ -137,6 +140,7 @@ $("#train-form").addEventListener("submit", async (ev) => {
   if (error) return toast(error.message, true);
   $("#train-text").value = "";
   toast("Sesi ditambahkan.");
+  logAction("training", `Tambah sesi ${TRAINING.kinds[kind] || kind} (${when.replace("T", " ")} WIB)`);
   load();
 });
 
@@ -160,6 +164,7 @@ $("#arb-form").addEventListener("submit", async (ev) => {
   if (error) return toast(error.code === "23503" ? `${LABELS.id} ${uid} tidak ditemukan sebagai member.` : error.message, true);
   $("#arb-out").textContent = `Arbiter ${LABELS.id} ${uid} diubah.`;
   toast("Arbiter diubah.");
+  logAction("training", `Ubah Arbiter ${LABELS.id} ${uid}`);
 });
 
 const app = $("#app");
