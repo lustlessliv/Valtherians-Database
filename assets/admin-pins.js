@@ -2,6 +2,7 @@
 // Fungsi database: create_pins, delete_test_data (lihat supabase-register.sql).
 import { sb, el, fmt } from "./lib.js";
 import { LABELS } from "./config.js";
+import { logAction } from "./adminlog.js";
 
 const $ = (q) => document.querySelector(q);
 
@@ -83,6 +84,7 @@ async function removeUnused(g, free) {
   const { error } = await q;
   if (error) return toast(error.message, true);
   toast(`${LABELS.pin} yang belum dipakai dihapus.`);
+  logAction("emblem", `Hapus ${fmt.format(free)} ${LABELS.pin} belum terpakai (${g.note || "tanpa catatan"})`);
   await load();
 }
 
@@ -145,6 +147,7 @@ $("#pin-form").addEventListener("submit", async (ev) => {
   if (error) return toast(error.message, true);
   showOutput(data.map((r) => r.pin));
   toast(`${fmt.format(data.length)} ${LABELS.pin} dibuat.`);
+  logAction("emblem", `Buat ${fmt.format(data.length)} ${LABELS.pin}${$("#pin-test").checked ? " uji coba" : ""}${$("#pin-note").value.trim() ? ` (${$("#pin-note").value.trim()})` : ""}`);
   await load();
 });
 
@@ -159,6 +162,7 @@ $("#pin-bound-form").addEventListener("submit", async (ev) => {
   showOutput([`${LABELS.id} ${uid}: ${data[0].pin}`]);
   $("#pin-uid").value = "";
   toast(`${LABELS.pin} untuk ${uid} dibuat.`);
+  logAction("emblem", `Buat/reset ${LABELS.pin} untuk ${LABELS.id} ${uid}`);
   await load();
 });
 
@@ -169,6 +173,7 @@ $("#test-clean").addEventListener("click", async () => {
   const { data, error } = await sb.rpc("delete_test_data");
   if (error) return toast(error.message, true);
   toast(`${fmt.format(data)} member uji coba dihapus.`);
+  logAction("emblem", `Hapus data uji coba (${fmt.format(data)} member)`);
   await load();
   $("#refresh")?.click(); // segarkan tabel member
 });
