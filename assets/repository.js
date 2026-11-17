@@ -429,25 +429,35 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   const tip = el("div", "chart-tip");
   tip.hidden = true;
   wrap.append(s, tip);
-
+  
+    const valueAt = (t) => {
+    if (t <= pts[0].i) return pts[0].v;
+    for (let k = 1; k < pts.length; k++) {
+      if (t <= pts[k].i) {
+        const a = pts[k - 1], b = pts[k];
+        return a.v + ((b.v - a.v) * (t - a.i)) / (b.i - a.i || 1);
+      }
+    }
+    return pts[pts.length - 1].v;
+  };
   const show = (ev) => {
     if (!pts.length) return;
     const rect = s.getBoundingClientRect();
-    const idx = Math.round(((ev.clientX - rect.left - m.l) / iw) * (N - 1));
-    const p = pts.reduce((a, b) => (Math.abs(b.i - idx) < Math.abs(a.i - idx) ? b : a));
-    const px = x(p.i);
+    const raw = ((ev.clientX - rect.left) * (W / rect.width) - m.l) / iw * (N - 1);
+    const t = Math.min(Math.max(raw, pts[0].i), pts[pts.length - 1].i);
+    const p = pts.reduce((a, b) => (Math.abs(b.i - t) < Math.abs(a.i - t) ? b : a));
+    const px = x(t), py = y(valueAt(t));
     cross.setAttribute("x1", px); cross.setAttribute("x2", px); cross.setAttribute("visibility", "visible");
-    dot.setAttribute("cx", px); dot.setAttribute("cy", y(p.v)); dot.setAttribute("visibility", "visible");
+    dot.setAttribute("cx", px); dot.setAttribute("cy", py); dot.setAttribute("visibility", "visible");
     tip.replaceChildren(el("div", "tip-date", fmtDay(p.day)), el("div", "tip-val", `${fmt.format(p.v)} ${LABELS.points}`));
     tip.hidden = false;
     const tw = tip.offsetWidth;
     tip.style.left = `${Math.min(Math.max(px - tw / 2, 0), W - tw)}px`;
-    tip.style.top = `${Math.max(y(p.v) - tip.offsetHeight - 12, 0)}px`;
+    tip.style.top = `${Math.max(py - tip.offsetHeight - 12, 0)}px`;
   };
   const hide = () => { cross.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); tip.hidden = true; };
   hit.addEventListener("pointermove", show);
-  hit.addEventListener("pointerdown", show);
-  hit.addEventListener("pointerleave", (ev) => { if (ev.pointerType === "mouse") hide(); });
+  hit.addEventListener("pointerdown", (ev) => { hit.setPointerCapture?.(ev.pointerId); show(ev); });
 }
 
 /* ---------------------------------------------------------- mulai */
