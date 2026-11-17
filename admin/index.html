@@ -193,36 +193,31 @@
           <h2>Kode Redeem</h2>
           <p class="muted small-text">Kosongkan kolom kode jika ingin dibuatkan acak. Satu kode bisa dipakai beberapa ID (satu ID tetap hanya sekali per kode). Jika nama batch diisi, satu ID hanya bisa menukar satu kode dari batch yang sama.</p>
 <form id="code-form" class="code-form">
-  <fieldset class="cf-group">
-    <legend>1. Isi kode</legend>
-    <div class="cf-grid">
-      <label>Sigil(s) per kode<input id="c-points" type="number" min="1" step="1" required /></label>
-      <label>Jumlah kode (maks. 100)<input id="c-qty" type="number" min="1" max="100" step="1" value="1" required /></label>
-      <label>Kode sendiri (opsional)<input id="c-custom" maxlength="40" placeholder="Kosong = acak" /></label>
-      <label>Catatan (opsional)<input id="c-note" maxlength="80" /></label>
-    </div>
-  </fieldset>
+  <div class="cf-row">
+    <label>Sigil per kode<input id="c-points" type="number" min="1" step="1" required /></label>
+    <label>Jumlah kode<input id="c-qty" type="number" min="1" max="100" step="1" value="1" required /></label>
+  </div>
+  <div class="cf-row">
+    <label>Kode (custom)<input id="c-custom" maxlength="40" placeholder="Kosong = acak" /></label>
+    <label>Catatan (opsional)<input id="c-note" maxlength="80" /></label>
+  </div>
+  <p id="c-custom-hint" class="muted small-text" hidden>Kode custom hanya bisa untuk 1 kode, jadi jumlah dikunci 1.</p>
 
-  <fieldset class="cf-group">
-    <legend>2. Pemakaian kode</legend>
-    <label class="check"><input type="radio" name="c-mode" value="single" checked /> Sekali pakai (1 ID)</label>
-    <label class="check"><input type="radio" name="c-mode" value="multi" /> Multi-pakai, dibatasi</label>
-    <div class="cf-sub" id="c-multi-box" hidden>
-      <label>Maksimal berapa ID per kode<input id="c-max" type="number" min="2" step="1" value="10" /></label>
-    </div>
-    <label class="check"><input type="radio" name="c-mode" value="unlimited" /> Multi-pakai, tanpa batas</label>
+  <div class="cf-opts">
+    <label class="check"><input id="c-batch-on" type="checkbox" /> Batch</label>
+    <label class="check"><input id="c-multi-on" type="checkbox" /> Multi-pakai</label>
+  </div>
+  <div class="cf-sub" id="c-batch-box" hidden>
+    <label>Nama batch<input id="c-batch" list="c-batches" maxlength="60" placeholder="Contoh: Expedition 1" /></label>
+    <datalist id="c-batches"></datalist>
+    <p class="muted small-text">Satu ID hanya bisa menukar satu kode dari batch yang sama.</p>
+  </div>
+  <div class="cf-sub" id="c-multi-box" hidden>
+    <label>Dipakai maksimal berapa ID<input id="c-max" type="number" min="2" step="1" value="10" /></label>
+    <label class="check"><input id="c-unlimited" type="checkbox" /> Tanpa batas</label>
     <p class="muted small-text">Satu ID tetap hanya bisa memakai kode yang sama sekali.</p>
-  </fieldset>
-
-  <fieldset class="cf-group">
-    <legend>3. Batch</legend>
-    <label class="check"><input id="c-batch-on" type="checkbox" /> Masukkan ke batch</label>
-    <div class="cf-sub" id="c-batch-box" hidden>
-      <label>Nama batch<input id="c-batch" list="c-batches" maxlength="60" placeholder="Contoh: Event Desember" /></label>
-      <datalist id="c-batches"></datalist>
-      <p class="muted small-text">Satu ID hanya bisa menukar satu kode dari batch yang sama.</p>
-    </div>
-  </fieldset>
+  </div>
+  <p class="muted small-text">Tanpa Batch dan Multi-pakai: 1 kode untuk 1 ID, tanpa batch.</p>
 
   <button class="btn primary" type="submit">Buat kode</button>
 </form>
