@@ -117,15 +117,17 @@ $("#code-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const points = parseInt($("#c-points").value, 10);
   const qty = parseInt($("#c-qty").value, 10);
-  const unlimited = $("#c-unlimited").checked;
-  const maxUses = unlimited ? null : parseInt($("#c-max").value, 10);
-  const batch = $("#c-batch").value.trim().slice(0, 60) || null;
+  const multi = $("#c-multi-on").checked;
+  const unlimited = multi && $("#c-unlimited").checked;
+  const maxUses = !multi ? 1 : unlimited ? null : parseInt($("#c-max").value, 10);
+  const batch = $("#c-batch-on").checked ? $("#c-batch").value.trim().slice(0, 60) || null : null;
+  if ($("#c-batch-on").checked && !batch) return toast("Isi nama batch.", true);
   const custom = $("#c-custom").value.trim().toUpperCase();
   const note = $("#c-note").value.trim().slice(0, 80) || null;
 
   if (!Number.isInteger(points) || points < 1) return toast(`${LABELS.points} harus angka 1 atau lebih.`, true);
   if (!Number.isInteger(qty) || qty < 1 || qty > 100) return toast("Jumlah kode 1 sampai 100.", true);
-  if (!unlimited && (!Number.isInteger(maxUses) || maxUses < 1)) return toast("Batas pemakaian harus 1 atau lebih.", true);
+  if (multi && !unlimited && (!Number.isInteger(maxUses) || maxUses < 2)) return toast("Batas multi-pakai minimal 2 ID, atau centang Tanpa batas.", true);
   if (batch) {
     const hit = codes.find((c) => c.batch && c.batch.toLowerCase() === batch.toLowerCase() && c.batch !== batch);
     if (hit) return toast(`Batch "${hit.batch}" sudah ada, pakai penulisan yang sama.`, true);
@@ -144,6 +146,8 @@ $("#code-form").addEventListener("submit", async (ev) => {
   $("#c-output").hidden = false;
   $("#c-output-actions").hidden = false;
   $("#c-custom").value = "";
+  $("#c-qty").disabled = false;
+  $("#c-custom-hint").hidden = true;
   toast(`${fmt.format(rows.length)} kode dibuat.`);
   logAction("redeem", `Buat ${fmt.format(rows.length)} kode (${fmt.format(points)} ${LABELS.points}${batch ? `, batch ${batch}` : ""}${unlimited ? ", tanpa batas" : maxUses > 1 ? `, ${maxUses} ID/kode` : ""}${note ? `, ${note}` : ""})`);
   await loadCodes();
@@ -160,7 +164,15 @@ $("#c-copy").addEventListener("click", async () => {
   }
 });
 
+$("#c-multi-on").addEventListener("change", (ev) => { $("#c-multi-box").hidden = !ev.target.checked; });
 $("#c-unlimited").addEventListener("change", (ev) => { $("#c-max").disabled = ev.target.checked; });
+$("#c-custom").addEventListener("input", (ev) => {
+  const on = ev.target.value.trim() !== "";
+  if (on) $("#c-qty").value = 1;
+  $("#c-qty").disabled = on;
+  $("#c-custom-hint").hidden = !on;
+});
+$("#c-batch-on").addEventListener("change", (ev) => { $("#c-batch-box").hidden = !ev.target.checked; });
 
 $("#c-filter").addEventListener("change", (ev) => {
   filter = ev.target.value;
