@@ -1,6 +1,7 @@
 // Dashboard: unggah / hapus file PDF uniform. Tabel: uniform_files (lihat supabase-v6.sql).
 import { sb, el } from "./lib.js";
 import { UNIFORMS } from "./config.js";
+import { logAction } from "./adminlog.js";
 
 const $ = (q) => document.querySelector(q);
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -55,6 +56,7 @@ async function load() {
           .update({ file_name: f.name, file_b64: b64, updated_at: new Date().toISOString() }).eq("id", row.id);
         if (e) throw e;
         toast("File diunggah.");
+        logAction("repository", `Unggah uniform ${meta.rank}: ${f.name}`);
         load();
       } catch (e) {
         toast(e.message || "Gagal mengunggah.", true);
@@ -71,6 +73,7 @@ async function load() {
         const { error: e } = await sb.from("uniform_files").update({ file_name: null, file_b64: null, updated_at: null }).eq("id", row.id);
         if (e) return toast(e.message, true);
         toast("File dihapus.");
+        logAction("repository", `Hapus file uniform ${meta.rank}`);
         load();
       });
       actions.append(del);
