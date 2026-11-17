@@ -221,6 +221,13 @@
 
   <button class="btn primary" type="submit">Buat kode</button>
 
+  </form>
+            <input id="c-points" type="number" min="1" step="1" placeholder="Sigil per kode" required />
+            <input id="c-qty" type="number" min="1" max="100" step="1" value="1" placeholder="Jumlah kode" required />
+            <input id="c-custom" maxlength="40" placeholder="Kode (custom)" />
+            <input id="c-note" maxlength="80" placeholder="Catatan (opsional)" />
+            <button class="btn primary" type="submit">Buat kode</button>
+          </form>
           <textarea id="c-output" rows="4" readonly hidden></textarea>
           <div class="inline" id="c-output-actions" hidden>
             <span class="muted small-text">Kode baru (salin sebelum ditutup):</span>
