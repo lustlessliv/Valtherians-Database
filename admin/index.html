@@ -191,9 +191,19 @@
 
         <section data-tab="redeem" class="card" id="codes-card">
           <h2>Kode Redeem</h2>
-          <p class="muted small-text">Tiap kode hanya bisa dipakai satu kali dan menambah Sigil ke ID yang memakainya. Kosongkan kolom kode kalau ingin dibuatkan acak.</p>
-          <form id="code-form" class="inline">
-            <input id="c-points" type="number" min="1" step="1" placeholder="Sigil(s) per kode" required />
+          <p class="muted small-text">Kosongkan kolom kode jika ingin dibuatkan acak. Satu kode bisa dipakai beberapa ID (satu ID tetap hanya sekali per kode). Jika nama batch diisi, satu ID hanya bisa menukar satu kode dari batch yang sama.</p>
+<form id="code-form" class="inline">
+  <input id="c-points" type="number" min="1" step="1" placeholder="Sigil per kode" required />
+  <input id="c-qty" type="number" min="1" max="100" step="1" value="1" placeholder="Jumlah kode" required />
+  <input id="c-max" type="number" min="1" step="1" value="1" placeholder="Batas ID" title="Satu kode bisa dipakai berapa ID" />
+  <label class="small-text"><input id="c-unlimited" type="checkbox" /> Tanpa batas</label>
+  <input id="c-batch" list="c-batches" maxlength="60" placeholder="Nama batch (opsional)" />
+  <datalist id="c-batches"></datalist>
+  <input id="c-custom" maxlength="40" placeholder="Kode (custom)" />
+  <input id="c-note" maxlength="80" placeholder="Catatan (opsional)" />
+  <button class="btn primary" type="submit">Buat kode</button>
+</form>
+            <input id="c-points" type="number" min="1" step="1" placeholder="Sigil per kode" required />
             <input id="c-qty" type="number" min="1" max="100" step="1" value="1" placeholder="Jumlah kode" required />
             <input id="c-custom" maxlength="40" placeholder="Kode (custom)" />
             <input id="c-note" maxlength="80" placeholder="Catatan (opsional)" />
