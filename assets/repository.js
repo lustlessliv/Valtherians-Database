@@ -422,9 +422,10 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
 
   // Lapisan hover: garis bidik + titik + tooltip
   const cross = svg("line", { y1: m.t, y2: m.t + ih, class: "ch-cross", visibility: "hidden" });
-  const dot = svg("circle", { r: 5, class: "ch-dot", visibility: "hidden" });
+  const dot = svg("circle", { r: 6, class: "ch-dot", visibility: "hidden", style: "pointer-events:none" });
+  const knob = svg("circle", { r: 22, fill: "transparent", visibility: "hidden", style: "touch-action:none;cursor:grab" });
   const hit = svg("rect", { x: m.l, y: m.t, width: iw, height: ih, fill: "transparent", style: "touch-action: pan-y" });
-  s.append(cross, dot, hit);
+  s.append(cross, hit, dot, knob);
 
   const tip = el("div", "chart-tip");
   tip.hidden = true;
@@ -440,24 +441,52 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
     }
     return pts[pts.length - 1].v;
   };
-  const show = (ev) => {
-    if (!pts.length) return;
-    const rect = s.getBoundingClientRect();
-    const raw = ((ev.clientX - rect.left) * (W / rect.width) - m.l) / iw * (N - 1);
-    const t = Math.min(Math.max(raw, pts[0].i), pts[pts.length - 1].i);
+    const place = (t, withTip = true) => {
     const p = pts.reduce((a, b) => (Math.abs(b.i - t) < Math.abs(a.i - t) ? b : a));
     const px = x(t), py = y(valueAt(t));
     cross.setAttribute("x1", px); cross.setAttribute("x2", px); cross.setAttribute("visibility", "visible");
     dot.setAttribute("cx", px); dot.setAttribute("cy", py); dot.setAttribute("visibility", "visible");
+    knob.setAttribute("cx", px); knob.setAttribute("cy", py); knob.setAttribute("visibility", "visible");
+    if (!withTip) return;
     tip.replaceChildren(el("div", "tip-date", fmtDay(p.day)), el("div", "tip-val", `${fmt.format(p.v)} ${LABELS.points}`));
     tip.hidden = false;
     const tw = tip.offsetWidth;
     tip.style.left = `${Math.min(Math.max(px - tw / 2, 0), W - tw)}px`;
     tip.style.top = `${Math.max(py - tip.offsetHeight - 12, 0)}px`;
   };
-  const hide = () => { cross.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); tip.hidden = true; };
-  hit.addEventListener("pointermove", show);
-  hit.addEventListener("pointerdown", (ev) => { hit.setPointerCapture?.(ev.pointerId); show(ev); });
+  const show = (clientX) => {
+    if (!pts.length) return;
+    const rect = s.getBoundingClientRect();
+    const raw = ((clientX - rect.left) * (W / rect.width) - m.l) / iw * (N - 1);
+    place(Math.min(Math.max(raw, pts[0].i), pts[pts.length - 1].i));
+  };
+
+  // Geser mulus: satu update per frame, titik mengikuti jari/kursor di sepanjang garis
+  let raf = 0, nextX = 0, dragging = false;
+  const move = (ev) => {
+    if (!dragging && ev.pointerType !== "mouse") return;
+    nextX = ev.clientX;
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; show(nextX); });
+  };
+  const down = (ev) => {
+    dragging = true;
+    ev.currentTarget.setPointerCapture?.(ev.pointerId);
+    knob.style.cursor = "grabbing";
+    nextX = ev.clientX;
+    show(nextX);
+  };
+  const up = () => { dragging = false; knob.style.cursor = "grab"; };
+  for (const t of [hit, knob]) {
+    t.addEventListener("pointermove", move);
+    t.addEventListener("pointerdown", down);
+    t.addEventListener("pointerup", up);
+    t.addEventListener("pointercancel", up);
+  }
+  s.style.userSelect = "none";
+  s.style.webkitUserSelect = "none";
+
+  // Awal: titik berada di data terakhir, siap digeser
+  if (pts.length) place(pts[pts.length - 1].i, false);
 }
 
 /* ---------------------------------------------------------- mulai */
