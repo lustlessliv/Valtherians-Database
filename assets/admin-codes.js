@@ -164,7 +164,14 @@ $("#c-copy").addEventListener("click", async () => {
   }
 });
 
-$("#c-multi-on").addEventListener("change", (ev) => { $("#c-multi-box").hidden = !ev.target.checked; });
+// Batch dan Multi-pakai saling meniadakan: pilih salah satu saja
+function syncOptions(changed) {
+  if (changed === "multi" && $("#c-multi-on").checked) $("#c-batch-on").checked = false;
+  if (changed === "batch" && $("#c-batch-on").checked) $("#c-multi-on").checked = false;
+  $("#c-multi-box").hidden = !$("#c-multi-on").checked;
+  $("#c-batch-box").hidden = !$("#c-batch-on").checked;
+}
+$("#c-multi-on").addEventListener("change", () => syncOptions("multi"));
 $("#c-unlimited").addEventListener("change", (ev) => { $("#c-max").disabled = ev.target.checked; });
 $("#c-custom").addEventListener("input", (ev) => {
   const on = ev.target.value.trim() !== "";
@@ -172,7 +179,7 @@ $("#c-custom").addEventListener("input", (ev) => {
   $("#c-qty").disabled = on;
   $("#c-custom-hint").hidden = !on;
 });
-$("#c-batch-on").addEventListener("change", (ev) => { $("#c-batch-box").hidden = !ev.target.checked; });
+$("#c-batch-on").addEventListener("change", () => syncOptions("batch"));
 
 $("#c-filter").addEventListener("change", (ev) => {
   filter = ev.target.value;
