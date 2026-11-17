@@ -1,5 +1,6 @@
 import { sb, el, fmt } from "./lib.js";
 import { LABELS } from "./config.js";
+import { logAction } from "./adminlog.js";
 
 const $ = (q) => document.querySelector(q);
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 karakter, tanpa I/O/0/1
@@ -80,6 +81,7 @@ async function removeCode(c) {
   const { error } = await sb.from("redeem_codes").delete().eq("code", c.code).is("redeemed_at", null);
   if (error) return toast(error.message, true);
   toast("Kode dihapus.");
+  logAction("redeem", `Hapus kode ${c.code}`);
   await loadCodes();
 }
 
@@ -107,6 +109,7 @@ $("#code-form").addEventListener("submit", async (ev) => {
   $("#c-output-actions").hidden = false;
   $("#c-custom").value = "";
   toast(`${fmt.format(rows.length)} kode dibuat.`);
+  logAction("redeem", `Buat ${fmt.format(rows.length)} kode (${fmt.format(points)} ${LABELS.points}${note ? `, ${note}` : ""})`);
   await loadCodes();
 });
 
