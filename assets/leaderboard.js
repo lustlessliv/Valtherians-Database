@@ -143,6 +143,8 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
       await showStatus(out, uid);
       load(); // segarkan leaderboard
     } else if (r?.status === "used") say(out, "error", "Kode ini sudah pernah dipakai.");
+    else if (r?.status === "self_used") say(out, "error", `${LABELS.id} ini sudah pernah memakai kode tersebut.`);
+    else if (r?.status === "batch_used") say(out, "error", `${LABELS.id} ini telah menukar kode dari ${r.batch}.`);
     else if (r?.status === "maintenance") say(out, "error", "Sedang dalam masa maintenance. Redeem ditutup sampai Chronicles berikutnya dimulai.");
     else if (r?.status === "staff") say(out, "error", `${LABELS.id} "${uid}" adalah Triune dan tidak bisa menukar kode.`);
     else if (r?.status === "no_player") say(out, "error", `${LABELS.id} "${uid}" tidak ditemukan.`);
