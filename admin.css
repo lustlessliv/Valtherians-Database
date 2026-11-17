@@ -38,3 +38,16 @@ tr.past { opacity: .5; }
 .admin-tabs { overflow-x: auto; flex-wrap: nowrap; margin: 4px 0 14px; padding-bottom: 4px; }
 .admin-tabs .tab { flex: 0 0 auto; padding: 10px 16px; white-space: nowrap; }
 .tab-hidden { display: none !important; }
+
+/* Form kode redeem: dipisah per jenis */
+.code-form { display: grid; gap: 14px; margin: 12px 0 16px; }
+.cf-group { margin: 0; padding: 12px 14px 14px; border: 1px solid var(--border); border-radius: 8px; display: grid; gap: 10px; min-width: 0; }
+.cf-group legend { padding: 0 8px; font-family: Cinzel, serif; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.cf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.cf-group label:not(.check) { display: grid; gap: 4px; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.cf-group label:not(.check) input { text-transform: none; letter-spacing: normal; width: 100%; min-width: 0; }
+.cf-group label.check { white-space: normal; color: var(--text); }
+.cf-group label.check input[type=radio] { flex: none; width: 18px; height: 18px; margin: 0; }
+.cf-sub { margin-left: 26px; display: grid; gap: 6px; max-width: 320px; }
+.cf-group p { margin: 0; }
+.code-form > .btn { justify-self: start; }
