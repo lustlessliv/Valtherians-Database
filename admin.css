@@ -35,7 +35,7 @@ tr.past { opacity: .5; }
 .uniform-admin { padding: 10px 0; border-top: 1px solid var(--border); display: grid; gap: 6px; }
 .uniform-admin-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
-.admin-tabs { overflow-x: auto; flex-wrap: nowrap; margin: 4px 0 14px; padding-bottom: 4px; }
+.admin-tabs { overflow-x: auto; flex-wrap: nowrap; margin: 4px 0 20px; padding-bottom: 4px; }
 .admin-tabs .tab { flex: 0 0 auto; padding: 10px 16px; white-space: nowrap; }
 .tab-hidden { display: none !important; }
 
