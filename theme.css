@@ -1,13 +1,14 @@
 :root {
-  --bg: #060a16;
-  --panel: #0f1a3a;
-  --panel-2: #14224a;
-  --border: #1f3066;
-  --text: #d3d9ea;
-  --muted: #8e99b8;
-  --gold: #d9b84a;
-  --gold-deep: #8f7527;
-  --nav: #0d1840;
+  --bg: #070d1d;
+  --panel: #0f1a36;
+  --panel-2: #142142;
+  --border: #1e2b4b;
+  --text: #e6eaf8;
+  --muted: #a1acca;
+  --gold: #cfae43;
+  --gold-bright: #f0d878;
+  --gold-deep: #77672c;
+  --nav: #0f1a36;
 }
 
 body { background: var(--bg); }
@@ -17,7 +18,7 @@ a { color: inherit; }
 .site-nav {
   position: sticky; top: 0; z-index: 20;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 4px 12px; padding: 8px 16px;
+  gap: 4px 12px; padding: 10px 20px;
   background: var(--nav); border-bottom: 1px solid var(--border);
 }
 .site-nav .brand {
@@ -28,43 +29,50 @@ a { color: inherit; }
 .site-nav .brand img { width: 24px; height: 24px; display: block; }
 .nav-links { display: flex; flex-wrap: wrap; gap: 2px; }
 .nav-links a {
-  text-decoration: none; font-size: .82rem; color: #b8c2dc;
+  text-decoration: none; font-size: .82rem; color: var(--muted);
   padding: 7px 10px; border-radius: 4px;
 }
 .nav-links a:hover { color: var(--gold); }
-.nav-links a.active { color: var(--gold); background: #3a331f; }
+.nav-links a.active { color: #e5c85a; background: #2f2a14; }
 
 /* ---------- Hero ---------- */
-.hero { padding: 24px 16px 8px; }
+.hero { padding: 28px 16px 12px; }
 .hero-card {
-  --bw: clamp(44px, 12vw, 90px);
+  --bw: clamp(46px, 11vw, 96px);
   position: relative; max-width: 760px; margin: 0 auto;
-  padding: 26px calc(var(--bw) + 20px);
-  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
-  background: radial-gradient(120% 90% at 50% 0%, #1a2b63 0%, #0f1a3d 55%, #0b1330 100%);
+  padding: 36px calc(var(--bw) + 26px);
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  background: radial-gradient(90% 75% at 50% 0%, #333947 0%, #262d3d 28%, #121a2f 62%, #080f1f 100%);
 }
-.hero-card .banner { position: absolute; top: 14px; width: var(--bw); height: auto; }
-.hero-card .banner.left { left: 14px; }
-.hero-card .banner.right { right: 14px; }
+.hero-card .banner { position: absolute; top: 20px; width: var(--bw); height: auto; }
+.hero-card .banner.left { left: 20px; }
+.hero-card .banner.right { right: 20px; }
 .hero-logo { display: block; margin: 0 auto 4px; width: clamp(64px, 18vw, 96px); height: auto; }
 .eyebrow {
   margin: 10px 0 6px; font-size: .72rem; letter-spacing: .28em;
   text-transform: uppercase; color: var(--muted);
 }
-.hero h1 { text-transform: uppercase; }
+.hero h1 { text-transform: uppercase; color: var(--gold-bright); }
 .hero-card h1 { font-size: clamp(1.45rem, 5vw, 2.6rem); line-height: 1.15; }
 .motto {
   margin: 10px 0 0; font-family: Cinzel, serif; color: var(--gold);
   letter-spacing: .06em; text-transform: uppercase; font-size: clamp(.95rem, 3.4vw, 1.2rem);
 }
-.hero-card .sub { margin-top: 14px; color: var(--text); font-size: .92rem; }
+.hero-card .sub { margin-top: 14px; color: var(--muted); font-size: .92rem; }
+.hero .sub { color: var(--muted); }
 .hero.small { padding: 24px 16px 4px; }
 
+/* ---------- Jarak halaman ---------- */
+.container { padding-top: 16px; padding-bottom: 56px; }
+
 /* ---------- Kartu, input, tombol ---------- */
-.card, .stat, dialog { border-radius: 8px; }
+.stat, dialog { border-radius: 8px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; box-shadow: none; }
+.tabs { margin-bottom: 20px; }
 .result { border-radius: 8px; border: 1px solid var(--border); }
 .tab { border-radius: 6px; }
 input, select, textarea, #search-form input { border-radius: 6px; }
+#search-form input { background: #0b1429; border: 1px solid var(--border); }
 
 .search label,
 .card h2 {
@@ -72,7 +80,7 @@ input, select, textarea, #search-form input { border-radius: 6px; }
   color: var(--gold);
 }
 .search label {
-  font-size: 1rem; padding-bottom: 8px; margin-bottom: 14px;
+  font-size: 1rem; padding-bottom: 10px; margin-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
 .card h2 { font-size: 1.05rem; }
@@ -80,10 +88,10 @@ input, select, textarea, #search-form input { border-radius: 6px; }
 dialog h2 { color: var(--gold); text-transform: uppercase; letter-spacing: .06em; }
 
 #search-form button, .link, .btn.primary {
-  background: var(--gold-deep); color: #140e02;
-  border: 1px solid #b5952f; border-radius: 6px;
+  background: var(--gold-deep); color: #10131f;
+  border: 1px solid #8d7a33; border-radius: 6px;
 }
-#search-form button:hover, .link:hover, .btn.primary:hover { background: #a68a2e; }
+#search-form button:hover, .link:hover, .btn.primary:hover { background: #8a7633; }
 .btn { border-radius: 6px; }
 
 .score, .num { color: var(--gold); }
