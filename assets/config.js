@@ -6,7 +6,7 @@
 
 export const SITE = {
   // ----- Logo & banner -----
-  logo: "logo.svg",          // logo di navbar & hero. Boleh .png / .svg / .webp
+  logo: "Valthera.png",          // logo di navbar & hero. Boleh .png / .svg / .webp
   bannerLeft: "banner.svg",  // banner di kiri hero ("" = tanpa banner)
   bannerRight: "banner.svg", // banner di kanan hero (boleh beda file)
 
