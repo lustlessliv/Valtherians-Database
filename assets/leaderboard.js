@@ -1,4 +1,3 @@
-// Halaman utama: Cari ID  >  Leaderboard  >  Redeem code
 import "./layout.js";
 import { RANKS, TOP, configured, el, fmt, rangeText, rankFor, sb } from "./lib.js";
 import { LABELS, RANKUP } from "./config.js";
@@ -8,7 +7,7 @@ import { statusCard } from "./idcard.js";
 const $ = (q) => document.querySelector(q);
 const REFRESH_MS = 60000;
 
-/* ---------------------------------------------------------- 1. Cari ID */
+/* ---------------------------------------------------------- Cari ID */
 
 function say(box, kind, text) {
   box.append(el("div", `notice ${kind}`, text));
@@ -34,7 +33,7 @@ $("#search-form").addEventListener("submit", async (ev) => {
   await showStatus(box, uid);
 });
 
-/* ---------------------------------------------------------- 2. Leaderboard */
+/* ---------------------------------------------------------- Leaderboard */
 
 let data = Object.fromEntries(RANKS.map((r) => [r.id, []]));
 let active = RANKS[0].id;
@@ -104,9 +103,8 @@ if (configured) {
   $("#board").replaceChildren(el("li", "empty", "Database belum dikonfigurasi (lihat README)."));
 }
 
-/* ---------------------------------------------------------- 3. Redeem code */
+/* ---------------------------------------------------------- Redeem code */
 
-// Ucapan selamat kalau rank naik (Aspirant dihitung sebagai "belum punya rank").
 function showRankUp(box, oldScore, newScore) {
   const before = rankFor(oldScore);
   const after = rankFor(newScore);
@@ -141,7 +139,7 @@ $("#redeem-form").addEventListener("submit", async (ev) => {
       $("#r-code").value = "";
       showRankUp(out, r.new_score - r.points_added, r.new_score);
       await showStatus(out, uid);
-      load(); // segarkan leaderboard
+      load();
     } else if (r?.status === "used") say(out, "error", "Kode ini sudah pernah dipakai.");
     else if (r?.status === "self_used") say(out, "error", `${LABELS.id} ini sudah pernah memakai kode tersebut.`);
     else if (r?.status === "batch_used") say(out, "error", `${LABELS.id} ini telah menukar kode dari ${r.batch}.`);
