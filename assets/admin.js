@@ -1,5 +1,3 @@
-// Dashboard Triune: kelola member (leaderboard), Triune (staff), impor CSV, riwayat.
-// Kode redeem ada di admin-codes.js.
 import "./layout.js";
 import { RANKS, configured, el, fmt, parseCsv, rankFor, sb } from "./lib.js";
 import { LABELS, STAFF_ROLES } from "./config.js";
@@ -7,17 +5,17 @@ import { ASPIRANT, staffSort, staffTag } from "./api.js";
 
 const $ = (q) => document.querySelector(q);
 
-const PAGE_SIZE = 50;      // jumlah baris member per halaman tabel
+const PAGE_SIZE = 10;
 const MAX_TITLE = 60;
-const MAX_ACH = 20;        // maks. insignia per orang
+const MAX_ACH = 20;
 
 let players = [];
 let staff = [];
-let staffReady = true;     // false kalau tabel staff belum dibuat (supabase-staff.sql belum dijalankan)
+let staffReady = true;
 let rankFilter = "all";
 let search = "";
-let page = 1;              // halaman tabel member yang sedang dibuka
-let editingUid = null;     // null = tambah member baru
+let page = 1;
+let editingUid = null;
 let staffFilter = "all";
 let staffSearch = "";
 let editingStaffUid = null;
@@ -119,7 +117,7 @@ function renderStats() {
     s.append(v, el("div", "stat-label", label));
     box.append(s);
   };
-  const real = players.filter((p) => !p.is_test); // data uji coba tidak dihitung
+  const real = players.filter((p) => !p.is_test);
   tile("Total Valtherians", real.length + staff.length);
   for (const r of RANKS) tile(r.short, real.filter((p) => rankFor(p.score)?.id === r.id).length, r.color);
   tile(ASPIRANT.short, real.filter((p) => !rankFor(p.score)).length, ASPIRANT.color);
@@ -257,7 +255,7 @@ async function removeMember(p) {
   await loadAll();
 }
 
-/* ---------------------------------------------------------- tambah / kurangi Sigil cepat */
+/* ---------------------------------------------------------- Sigil*/
 
 $("#adjust-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
@@ -437,7 +435,6 @@ async function loadLog() {
 
 /* ---------------------------------------------------------- impor CSV */
 
-// kolom opsional di header -> nama kolom database
 const OPTIONAL_COLS = [
   ["joined_at", ["joined_at", "joined", "bergabung"]],
   ["title", ["title"]],
@@ -490,7 +487,6 @@ $("#import-btn").addEventListener("click", async () => {
   } catch (e) {
     return toast(e.message, true);
   }
-  // ID staff tidak boleh masuk leaderboard
   const blocked = staffUids();
   const skipped = rows.filter((r) => blocked.has(r.uid));
   rows = rows.filter((r) => !blocked.has(r.uid));
@@ -509,7 +505,7 @@ $("#import-btn").addEventListener("click", async () => {
   await loadAll();
 });
 
-/* ---------------------------------------------------------- filter & kontrol umum */
+/* ---------------------------------------------------------- filter & kontrol*/
 
 fillSelect($("#rank-filter"), [["all", "Semua rank"], ...RANKS.map((r) => [r.id, r.short]), ["aspirant", ASPIRANT.short]]);
 $("#rank-filter").addEventListener("change", (ev) => { rankFilter = ev.target.value; page = 1; renderPlayers(); });
