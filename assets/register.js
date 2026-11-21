@@ -1,4 +1,3 @@
-// Halaman Daftar (tersembunyi): nama + Emblem -> ID otomatis, kartu sambutan, dan ganti nama.
 import "./layout.js";
 import { configured, el, sb } from "./lib.js";
 import { LABELS, WELCOME, TRAINING, SITE } from "./config.js";
@@ -12,11 +11,10 @@ function say(box, kind, text) {
   box.replaceChildren(el("div", `notice ${kind}`, text));
 }
 
-// Emblem otomatis huruf besar
 for (const sel of ["#reg-pin", "#ren-pin"]) {
   $(sel).addEventListener("input", (ev) => { ev.target.value = ev.target.value.toUpperCase(); });
 }
-/* ---------------------------------------------------------- menu (tab) */
+/* ---------------------------------------------------------- tab */
 
 const MODES = ["register", "resume", "rename"];
 let mode = null;
@@ -40,7 +38,7 @@ setMode(new URLSearchParams(location.search).get("tab") === "resume" ? "resume" 
 
 $("#rename-sub").textContent = `Pakai ${LABELS.id} dan ${LABELS.pin}-mu. ${WELCOME.renameCooldownText}`;
 
-/* ---------------------------------------------------------- kartu sambutan */
+/* ---------------------------------------------------------- welcoming */
 
 function linkButton(item) {
   const a = el("a", "link-btn");
@@ -63,15 +61,14 @@ function linkSection(title, links) {
   return box;
 }
 
-// Layar akhir: kartu sambutan + ID card + tautan. later = member menunda memilih jadwal.
 async function showDone(uid, name, later = false) {
   const done = $("#done");
   done.replaceChildren();
   setMode(null);
-  $("#mode-tabs").style.display = "none"; // layar akhir tanpa menu
+  $("#mode-tabs").style.display = "none";
   $("#mode-hint").textContent = "";
   const hero = document.querySelector(".hero");
-  if (hero) hero.style.display = "none"; // hero tidak dibawa lagi setelah alur dimulai
+  if (hero) hero.style.display = "none";
 
   const welcome = el("section", "card welcome highlight");
   welcome.append(
@@ -85,7 +82,7 @@ async function showDone(uid, name, later = false) {
   done.append(welcome);
   done.append(stepper(3, later ? [2] : []));
 
-  // ID card pertama kali
+  // ID card //
   const { member } = await lookupMember(uid);
   if (member) {
     const card = el("section", "card");
@@ -114,7 +111,6 @@ async function showDone(uid, name, later = false) {
 
 /* ---------------------------------------------------------- training */
 
-// Logo kecil di kotak sambutan
 function crest() {
   const img = new Image();
   img.className = "hl-logo";
@@ -164,7 +160,6 @@ function stepper(current, skipped = []) {
   return wrap;
 }
 
-// Layar Training: kotak atas (sambutan + ID, dibuat lebih terang) dan kartu Arbiter + jadwal.
 async function startTraining(me) {
   const box = $("#done");
   for (const m of MODES) $(`#${m}-card`).hidden = true;
@@ -186,7 +181,7 @@ async function startTraining(me) {
   }
 
   const heroEl = document.querySelector(".hero");
-  if (heroEl) heroEl.style.display = "none"; // hero hilang setelah ID + Emblem berhasil dimasukkan
+  if (heroEl) heroEl.style.display = "none";
   const head = el("section", "card welcome highlight");
   head.append(
     crest(),
@@ -210,17 +205,14 @@ async function startTraining(me) {
   renderTraining(step, me, m, arbs.data || [], sess.data || []);
 }
 
-// Satu layar: pilih Arbiter + jadwal, lalu "Ajukan status Trainee".
-// Aturan: tepat 1 sesi tiap jenis, salah satunya dipandu Arbiter pilihan, dan tanggal & jam tidak boleh sama.
 function renderTraining(step, me, m, arbiters, sessions) {
   const joined = new Set(m.session_ids || []);
-  const chosen = { sistem: null, ekspedisi: null }; // satu sesi per jenis (belum disimpan)
-  const have = { sistem: !!m.has_sistem, ekspedisi: !!m.has_ekspedisi }; // jenis yang sudah terdaftar
+  const chosen = { sistem: null, ekspedisi: null };
+  const have = { sistem: !!m.has_sistem, ekspedisi: !!m.has_ekspedisi };
   let arb = m.arbiter_uid || null;
   const out = el("div");
 
   const byId = new Map(sessions.map((s) => [s.id, s]));
-  // waktu mulai semua sesi yang sudah dipilih / sudah terdaftar (untuk blokir bentrok)
   const takenTimes = (exceptKind) => {
     const times = [];
     for (const id of joined) { const s = byId.get(id); if (s) times.push(s.starts_at); }
