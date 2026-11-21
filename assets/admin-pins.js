@@ -1,5 +1,4 @@
-// Dashboard: buat & kelola Emblem (PIN) member, hapus data uji coba.
-// Fungsi database: create_pins, delete_test_data (lihat supabase-register.sql).
+// Dashboard Emblem //
 import { sb, el, fmt } from "./lib.js";
 import { LABELS } from "./config.js";
 import { logAction } from "./adminlog.js";
@@ -35,7 +34,6 @@ async function copyText(text) {
   }
 }
 
-/* ---------- Ringkasan Emblem asli (per catatan). Emblem asli tidak pernah ditampilkan. ---------- */
 
 function renderSummary() {
   const body = $("#pins-summary");
@@ -88,7 +86,7 @@ async function removeUnused(g, free) {
   await load();
 }
 
-/* ---------- Daftar Emblem uji coba (ditampilkan lengkap) ---------- */
+/* ---------- Tester ---------- */
 
 function renderTests() {
   const body = $("#pins-body");
@@ -133,7 +131,7 @@ async function load() {
   render();
 }
 
-// Buat Emblem pendaftaran baru
+// Create //
 $("#pin-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const qty = parseInt($("#pin-qty").value, 10);
@@ -151,7 +149,7 @@ $("#pin-form").addEventListener("submit", async (ev) => {
   await load();
 });
 
-// Buat / reset Emblem untuk ID yang sudah ada
+// Reset //
 $("#pin-bound-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const uid = $("#pin-uid").value.trim();
@@ -175,10 +173,9 @@ $("#test-clean").addEventListener("click", async () => {
   toast(`${fmt.format(data)} member uji coba dihapus.`);
   logAction("emblem", `Hapus data uji coba (${fmt.format(data)} member)`);
   await load();
-  $("#refresh")?.click(); // segarkan tabel member
+  $("#refresh")?.click();
 });
 
-// Muat daftar begitu dashboard terbuka (setelah login admin)
 const app = $("#app");
 new MutationObserver(() => { if (!app.hidden) load(); }).observe(app, { attributes: true, attributeFilter: ["hidden"] });
 if (!app.hidden) load();
