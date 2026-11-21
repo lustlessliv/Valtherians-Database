@@ -1,4 +1,3 @@
-// Dashboard: unggah / hapus file PDF uniform. Tabel: uniform_files (lihat supabase-v6.sql).
 import { sb, el } from "./lib.js";
 import { UNIFORMS } from "./config.js";
 import { logAction } from "./adminlog.js";
