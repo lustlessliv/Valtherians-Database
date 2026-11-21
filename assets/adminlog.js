@@ -1,5 +1,3 @@
-// Riwayat perubahan per tab dashboard Triune (Emblem, Training, Repository, Kode Redeem).
-// Tab Valtherians tetap memakai riwayat lamanya di admin.js.
 import { sb, el } from "./lib.js";
 
 const TABS = ["emblem", "training", "repository", "redeem"];
@@ -19,17 +17,15 @@ async function loadTabLog(tab) {
   }
 }
 
-// Catat satu aksi. Kalau gagal, aksi aslinya tetap jalan (riwayat tidak boleh mengganggu).
 export async function logAction(tab, text) {
   try {
     const { data } = await sb.auth.getSession();
     const by = data?.session?.user?.email?.split("@")[0] || null;
     await sb.from("admin_log").insert({ tab, text, by_name: by });
-  } catch { /* abaikan */ }
+  } catch {  }
   loadTabLog(tab);
 }
 
-// Muat semua riwayat begitu dashboard terbuka (setelah login Triune)
 const app = document.querySelector("#app");
 const loadAll = () => TABS.forEach(loadTabLog);
 new MutationObserver(() => { if (!app.hidden) loadAll(); }).observe(app, { attributes: true, attributeFilter: ["hidden"] });
