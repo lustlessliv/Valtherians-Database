@@ -1,4 +1,3 @@
-// Kartu ID (halaman Database) dan kartu cek Sigil (halaman Leaderboard).
 import { el, fmt } from "./lib.js";
 import { SITE, LABELS, STAFF_COLOR } from "./config.js";
 import { KNIGHT, rankOf, staffTag } from "./api.js";
@@ -47,7 +46,6 @@ export function buildIdCard(m) {
   } else {
     grid.append(field(LABELS.points, fmt.format(m.score)));
     if (m.rank_id) {
-      // Knight ke atas: posisi dari keseluruhan member, bukan hanya di rank-nya
       const overall = m.overall_pos != null ? `#${fmt.format(m.overall_pos)} dari ${fmt.format(m.overall_total)}` : `#${m.pos} dari ${fmt.format(m.total)}`;
       grid.append(field("Posisi", overall));
     } else {
@@ -70,7 +68,6 @@ export function buildIdCard(m) {
   return card;
 }
 
-/* ---------------------------------------------------------- Kartu cek Sigil */
 
 function progressInfo(score) {
   const i = RANKS.findIndex((r) => score >= r.min);
