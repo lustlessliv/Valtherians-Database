@@ -1,4 +1,3 @@
-// Dashboard Triune: menu tab. Setiap kartu bertanda data-tab="..." hanya tampil di tab-nya.
 const TABS = [
   { id: "valtherians", label: "Valtherians" },
   { id: "emblem", label: "Emblem" },
@@ -17,7 +16,7 @@ function saved() {
   try {
     const v = sessionStorage.getItem(KEY);
     if (TABS.some((t) => t.id === v)) return v;
-  } catch { /* abaikan */ }
+  } catch {  }
   return TABS[0].id;
 }
 
@@ -31,7 +30,7 @@ function show(id) {
     if (s.parentElement === bar) continue;
     s.classList.toggle("tab-hidden", s.dataset.tab !== id);
   }
-  try { sessionStorage.setItem(KEY, id); } catch { /* abaikan */ }
+  try { sessionStorage.setItem(KEY, id); } catch {  }
   history.replaceState(null, "", `#${id}`);
 }
 
