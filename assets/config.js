@@ -1,4 +1,4 @@
- SITE = {
+export const SITE = {
   logo: "Valthera.png",
   bannerLeft: "banner.svg",
   bannerRight: "banner.svg",
