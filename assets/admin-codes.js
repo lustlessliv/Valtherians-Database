@@ -3,7 +3,7 @@ import { LABELS } from "./config.js";
 import { logAction } from "./adminlog.js";
 
 const $ = (q) => document.querySelector(q);
-const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 karakter, tanpa I/O/0/1
+const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const SHOW_LIMIT = 200;
 
 let codes = [];
@@ -164,7 +164,7 @@ $("#c-copy").addEventListener("click", async () => {
   }
 });
 
-// Batch dan Multi-pakai saling meniadakan: pilih salah satu saja
+// Batch //
 function syncOptions(changed) {
   if (changed === "multi" && $("#c-multi-on").checked) $("#c-batch-on").checked = false;
   if (changed === "batch" && $("#c-batch-on").checked) $("#c-multi-on").checked = false;
