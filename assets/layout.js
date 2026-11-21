@@ -1,9 +1,7 @@
-// Menyusun navbar, hero (logo + banner), dan footer untuk semua halaman.
-// Isi & gambarnya diatur di config.js. Halaman cukup memakai <body data-page="...">.
 import { SITE, NAV, PAGES } from "./config.js";
 
-const ROOT = new URL("../", import.meta.url); // folder utama website
-const url = (p) => new URL(p || "./", ROOT).href; // "" = halaman utama
+const ROOT = new URL("../", import.meta.url);
+const url = (p) => new URL(p || "./", ROOT).href;
 
 function make(tag, cls, html) {
   const n = document.createElement(tag);
