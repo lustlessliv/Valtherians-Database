@@ -1,5 +1,3 @@
-// Dashboard: jadwal sesi Training dan Arbiter member.
-// Tabel: training_sessions, training_signups, trainee_arbiter (lihat supabase-training.sql).
 import { sb, el } from "./lib.js";
 import { LABELS, TRAINING } from "./config.js";
 import { logAction } from "./adminlog.js";
@@ -85,7 +83,7 @@ async function load() {
   $("#train-note").textContent = se.data.length ? "Sesi yang sudah lewat tampil redup." : "Belum ada sesi.";
 }
 
-// Panel skor: isi nilai 0-100 tiap peserta sesi
+
 async function openScores(session, signups) {
   const panel = $("#score-panel");
   panel.hidden = false;
@@ -129,7 +127,7 @@ $("#train-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const kind = $("#train-kind").value;
   const trainer = $("#train-trainer").value;
-  const when = $("#train-when").value; // waktu WIB
+  const when = $("#train-when").value; // WIB
   if (!trainer || !when) return toast("Isi Triune pemandu dan waktu dulu.", true);
   const { error } = await sb.from("training_sessions").insert({
     kind,
@@ -144,7 +142,7 @@ $("#train-form").addEventListener("submit", async (ev) => {
   load();
 });
 
-// Lihat / ubah Arbiter seorang member
+// Arbiter //
 $("#arb-show").addEventListener("click", async () => {
   const uid = $("#arb-uid").value.trim();
   const out = $("#arb-out");
