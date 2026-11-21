@@ -1,5 +1,3 @@
-// Halaman Repository: login ID + Emblem (token 60 menit), profil, training, grafik Sigil(s) per season.
-// Fungsi database: member_login, member_logout, repo_data (lihat supabase-repository.sql).
 import "./layout.js";
 import { configured, el, sb, fmt, RANKS, rankFor } from "./lib.js";
 import { LABELS, REPOSITORY as T, STAFF_COLOR, TRAINING, UNIFORMS } from "./config.js";
@@ -8,12 +6,11 @@ import { ASPIRANT, staffTag } from "./api.js";
 const $ = (q) => document.querySelector(q);
 const KEY = "vla_repo_token";
 
-/* ---------------------------------------------------------- penyimpanan token (hanya selama tab terbuka) */
 
 const store = {
   get() { try { return sessionStorage.getItem(KEY) || ""; } catch { return ""; } },
-  set(v) { try { sessionStorage.setItem(KEY, v); } catch { /* abaikan */ } },
-  clear() { try { sessionStorage.removeItem(KEY); } catch { /* abaikan */ } },
+  set(v) { try { sessionStorage.setItem(KEY, v); } catch {  } },
+  clear() { try { sessionStorage.removeItem(KEY); } catch {  } },
 };
 
 function say(box, kind, text) { box.replaceChildren(el("div", `notice ${kind}`, text)); }
@@ -120,7 +117,7 @@ function render(d) {
   const isMember = d.kind === "member";
   const rank = isMember ? rankFor(d.score) || ASPIRANT : null;
 
-  // --- Profil: kartu berwarna sesuai rank saat ini
+  // --- Profil
   const color = isMember ? rank.color : STAFF_COLOR;
   const rankName = isMember ? rank.name || rank.short : staffTag(d);
   const head = el("section", "pcard");
@@ -164,10 +161,10 @@ function render(d) {
 
   if (isMember) {
     const isAspirant = rank.id === ASPIRANT.id;
-    if (isAspirant) root.append(trainingCard(d)); // jadwal penting: tetap di atas
+    if (isAspirant) root.append(trainingCard(d));
     root.append(graphCard(d));
     root.append(uniformCard());
-    if (!isAspirant) root.append(scoreCard(d)); // skor Training di paling bawah
+    if (!isAspirant) root.append(scoreCard(d));
   } else {
     const note = el("section", "card");
     note.append(el("p", "sec-sub", T.staffNote));
@@ -211,7 +208,7 @@ function trainingCard(d) {
   return card;
 }
 
-/* ---------------------------------------------------------- skor training (untuk Knight ke atas) */
+/* ---------------------------------------------------------- skor training */
 
 function scoreCard(d) {
   const card = el("section", "card");
@@ -245,7 +242,7 @@ function uniformCard() {
     const mine = new Map((data || []).map((u) => [u.id, u]));
     for (const u of UNIFORMS) {
       const info = mine.get(u.id);
-      if (!info) continue; // belum waktunya diakses
+      if (!info) continue;
       const box = el("div", "uniform" + (info.has_file ? "" : " off"));
       const pic = el("button", "uniform-pic");
       pic.type = "button";
@@ -277,7 +274,7 @@ function uniformCard() {
 
 async function openUniform(id, download, out) {
   out.replaceChildren();
-  const win = download ? null : window.open("", "_blank"); // dibuka dulu supaya tidak diblokir browser
+  const win = download ? null : window.open("", "_blank");
   const { data, error } = await sb.rpc("repo_uniform_file", { p_token: store.get(), p_id: id });
   if (error || !data) {
     win?.close();
@@ -297,7 +294,7 @@ async function openUniform(id, download, out) {
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
-/* ---------------------------------------------------------- grafik Sigil(s) */
+/* ---------------------------------------------------------- grafik Sigil */
 
 const NS = "http://www.w3.org/2000/svg";
 function svg(tag, attrs = {}, text) {
@@ -336,7 +333,6 @@ function graphCard(d) {
   let t;
   window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(draw, 120); });
 
-  // Tampilan tabel (perubahan saja) sebagai alternatif grafik
   const det = el("details", "chart-table");
   det.append(el("summary", "", "Lihat data"));
   const tbl = el("table");
@@ -382,13 +378,13 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   defs.append(pat);
   s.append(defs);
 
-  // Kisi & sumbu Y
+  // sumbu Y
   for (let v = 0; v <= yMax; v += step) {
     s.append(svg("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: v === 0 ? "ch-axis" : "ch-grid" }));
     s.append(svg("text", { x: m.l - 8, y: y(v) + 4, class: "ch-tick", "text-anchor": "end" }, fmt.format(v)));
   }
 
-  // Sumbu X: awal tiap bulan
+  // Sumbu X
   for (let k = 0; k < 3; k++) {
     const dt = new Date(start); dt.setUTCMonth(dt.getUTCMonth() + k);
     const i = dayDiff(start, dt.getTime());
@@ -401,7 +397,7 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   const cx = (mx + W - m.r) / 2, cy = m.t + ih / 2;
   s.append(svg("text", { x: cx, y: cy, class: "ch-maint", "text-anchor": "middle", "dominant-baseline": "middle", transform: `rotate(-90 ${cx} ${cy})` }, T.graphMaintenance));
 
-  // Batas rank yang terlihat di grafik
+  // Batas rank
   for (const r of RANKS) {
     if (r.min > 0 && r.min <= yMax) {
       s.append(svg("line", { x1: m.l, x2: mx, y1: y(r.min), y2: y(r.min), class: "ch-ref" }));
@@ -409,7 +405,7 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
     }
   }
 
-  // Garis data (2px) + titik terakhir
+  // Garis data (2px)
   if (pts.length > 1) {
     s.append(svg("path", { d: pts.map((p, k) => `${k ? "L" : "M"}${x(p.i).toFixed(1)} ${y(p.v).toFixed(1)}`).join(" "), class: "ch-line" }));
   }
@@ -461,7 +457,6 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
     place(Math.min(Math.max(raw, pts[0].i), pts[pts.length - 1].i));
   };
 
-  // Geser mulus: satu update per frame, titik mengikuti jari/kursor di sepanjang garis
   let raf = 0, nextX = 0, dragging = false;
   const move = (ev) => {
     if (!dragging && ev.pointerType !== "mouse") return;
@@ -485,10 +480,8 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   s.style.userSelect = "none";
   s.style.webkitUserSelect = "none";
 
-  // Awal: titik berada di data terakhir, siap digeser
   if (pts.length) place(pts[pts.length - 1].i, false);
 }
 
-/* ---------------------------------------------------------- mulai */
 
 if (store.get()) load(false);
