@@ -1,44 +1,32 @@
-/* ============================================================
-   PENGATURAN TAMPILAN WEBSITE  (file ini aman diedit)
-   Semua teks, logo, banner, dan istilah ada di sini.
-   Path gambar dihitung dari folder utama website (tempat index.html).
-   ============================================================ */
+ SITE = {
+  logo: "Valthera.png",
+  bannerLeft: "banner.svg",
+  bannerRight: "banner.svg",
 
-export const SITE = {
-  // ----- Logo & banner -----
-  logo: "Valthera.png",          // logo di navbar & hero. Boleh .png / .svg / .webp
-  bannerLeft: "banner.svg",  // banner di kiri hero ("" = tanpa banner)
-  bannerRight: "banner.svg", // banner di kanan hero (boleh beda file)
-
-  // ----- Teks umum -----
-  brand: "Valthera",                          // teks di pojok kiri navbar
-  eyebrow: "Imperium of Aldervane",           // tulisan kecil di atas judul hero
-  motto: "“Ad Gloria, Ad Aeterna”",           // motto di hero & footer
+  brand: "Valthera",
+  eyebrow: "Imperium of Aldervane",
+  motto: "“Ad Gloria, Ad Aeterna”",
   footerLine: "Valthera Legion of Aldervane · Chronicles I: First Light",
-  credit: "Web developed by <b>One</b> &amp; <b>Zero</b>", // boleh pakai HTML
-  idCardFooter: "Imperium of Aldervane",      // tulisan di bawah ID card
-  idCardTitle: "Valtherians",                 // judul di header ID card
-};
+  credit: "Web developed by <b>One</b> &amp; <b>Zero</b>",
+  idCardFooter: "Imperium of Aldervane",
+  idCardTitle: "Valtherians",
+ }
 
-// ----- Istilah yang tampil di website (hanya tampilan, nama kolom database tidak berubah) -----
 export const LABELS = {
   id: "ID",
-  points: "Sigil",      // dipakai di kalimat, mis. "500 Sigil(s)"
-  pointsColumn: "Sigil",   // dipakai di judul kolom tabel
+  points: "Sigil", // (s)
+  pointsColumn: "Sigil",
   aspirant: "Aspirant",
   unranked: "Belum dinobatkan",
-  pin: "Emblem",           // istilah untuk PIN member
+  pin: "Emblem",
 };
 
-// ----- Ucapan selamat setelah redeem kalau rank naik (kunci = id rank) -----
 export const RANKUP = {
   knight:   "Selamat telah menjadi bagian dari Legionnaires!",
   sentinel: "Selamat telah mencapai rank Sentinel of Aldervane!",
   praefect: "Selamat telah mencapai rank Praefect of Aldervane!",
 };
 
-// ----- Isi tiap halaman -----
-// nav: urutan menu. hidden: true = menu hanya muncul di halaman itu sendiri.
 export const NAV = [
   { key: "database",    label: "Database",    href: "database/" },
   { key: "leaderboard", label: "Leaderboard", href: "" },
@@ -67,24 +55,18 @@ export const PAGES = {
   admin: {
     title: "Dashboard Triune",
     sub: "Kelola catatan Valtherians, Triune, dan Sigil Legionate Leaderboard",
-    small: true, // hero kecil tanpa logo & banner
+    small: true,
   },
 };
 
-// ----- Jabatan staff (Triune) -----
-// Tag tampil "Segate - Arbiter". Urutan di sini = urutan tampil di website.
 export const STAFF_ROLES = [
   { role: "Marshal", divisions: [] },
   { role: "Legate",  divisions: [] },
   { role: "Segate",  divisions: ["Arbiter", "Provost", "Herald", "Scrivener", "Artificer"] },
 ];
-// Catatan: kalau menambah/mengubah jabatan atau divisi, samakan juga daftar di
-// supabase-setup.sql (bagian "create table public.staff") supaya database menerimanya.
 
-export const STAFF_COLOR = "#d9b84a"; // warna ID card & tag staff
+export const STAFF_COLOR = "#d9b84a";
 
-// ----- Halaman Daftar (tersembunyi: tidak ada di menu, buka lewat alamat /daftar/) -----
-// Link dengan url kosong tidak ditampilkan.
 export const WELCOME = {
   doneTitle: "Salve! Selamat bergabung",
   finalText: "Selamat bergabung! Jelajahi berbagai area di Valthera Legion dengan mengunjungi Arx Divina dan WhatsApp/Discord Legion.",
@@ -99,7 +81,7 @@ export const WELCOME = {
     { label: "Arx Divina", url: "#", desc: "Pusat informasi Valthera Legion" },
   ],
   repositoryLabel: "Cek Valtherian's Repository",
-  repositoryUrl: "repository/", // isi saat halaman Repository sudah ada, mis. "repository/"
+  repositoryUrl: "repository/",
   renameCooldownText: "Nama hanya bisa diganti sekali setiap 7 hari.",
 };
 
