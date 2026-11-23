@@ -38,7 +38,7 @@ async function load() {
   }
   staff = st.data;
   fillSelect($("#train-trainer"), staff, "Pilih Triune");
-  fillSelect($("#arb-select"), staff.filter((s) => s.division === "Arbiter"), "Pilih Arbiter");
+  fillSelect($("#arb-select"), staff.filter((s) => s.division === "Arbiter" || s.role === "Marshal"), "Pilih Arbiter");
 
   const names = new Map(staff.map((s) => [s.uid, s.name]));
   const body = $("#train-body");
