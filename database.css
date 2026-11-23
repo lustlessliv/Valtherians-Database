@@ -242,7 +242,7 @@
 .uniform.off .uniform-pic { background: repeating-linear-gradient(45deg, #101a3d, #101a3d 8px, #131f47 8px, #131f47 16px); }
 .uniform-cap { margin-top: auto; }
 .uniform-rank { font-family: Cinzel, serif; font-size: .82rem; color: var(--gold); letter-spacing: .04em; text-transform: uppercase; }
-.uniform-name { color: var(--muted); font-size: .8rem; margin-top: 2px; }
+.uniform-name { color: var(--muted); font-size: .8rem; text-align: center; }
 
 .pcard { --rc: #aab2c8; position: relative; overflow: hidden; border-radius: 16px; padding: 22px 20px 20px; margin-bottom: 16px; color: var(--text);
   background: linear-gradient(135deg, color-mix(in srgb, var(--rc) 34%, #0a1130) 0%, #0b1331 48%, #070c22 100%);
