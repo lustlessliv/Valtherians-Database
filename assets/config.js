@@ -73,12 +73,12 @@ export const WELCOME = {
   doneText: "Legion ID kamu sudah dibuat. Simpan Legion ID dan Emblem-mu baik-baik, keduanya dipakai untuk masuk ke berbagai area Legion.",
   joinTitle: "Bergabung dengan komunitas",
   joinLinks: [
-    { label: "WhatsApp", url: "#" },
+    { label: "WhatsApp", url: "https://chat.whatsapp.com/CIvyrn2EtIfBMOKtJklldc?s=cl&p=a&iam=2" },
     { label: "Discord", url: "#" },
   ],
   infoTitle: "Informasi Legion",
   infoLinks: [
-    { label: "Arx Divina", url: "#", desc: "Pusat informasi Valthera Legion" },
+    { label: "Arx Divina", url: "https://github.io/lustlessliv/VLA-Arx-Divina", desc: "Pusat informasi Valthera Legion" },
   ],
   repositoryLabel: "Cek Valtherian's Repository",
   repositoryUrl: "repository/",
