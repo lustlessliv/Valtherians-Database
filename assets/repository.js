@@ -256,10 +256,10 @@ function uniformCard() {
         pic.append(img);
       }
       const cap = el("div", "uniform-cap");
-      cap.append(el("div", "uniform-rank", u.rank), el("div", "uniform-name", info.has_file ? u.name || "\u00a0" : T.uniformMissing));
+      cap.append(el("div", "uniform-rank", u.rank));
       pic.append(cap);
       pic.addEventListener("click", () => openUniform(u.id, false, out));
-      box.append(pic);
+      box.append(pic, el("div", "uniform-name", info.has_file ? u.name || "\u00a0" : T.uniformMissing));
       if (info.has_file) {
         const dl = el("button", "btn-ghost small", T.uniformDownload);
         dl.type = "button";
