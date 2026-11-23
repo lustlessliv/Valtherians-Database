@@ -78,7 +78,7 @@ export const WELCOME = {
   ],
   infoTitle: "Informasi Legion",
   infoLinks: [
-    { label: "Arx Divina", url: "https://github.io/lustlessliv/VLA-Arx-Divina", desc: "Pusat informasi Valthera Legion" },
+    { label: "Arx Divina", url: "https://lustlessliv.github.io/VLA-Arx-Divina", desc: "Pusat informasi Valthera Legion" },
   ],
   repositoryLabel: "Cek Valtherian's Repository",
   repositoryUrl: "repository/",
