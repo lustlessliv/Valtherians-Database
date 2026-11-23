@@ -127,6 +127,8 @@ export const REPOSITORY = {
   trainingEmpty: "Belum ada sesi Training yang kamu ikuti.",
   trainingContinue: "Pilih atau lengkapi Training",
   graphTitle: "Grafik Sigil",
+  graphPreTitle: "Pra-season",
+  graphPreNote: "{n} hari sebelum season dimulai.",
   graphMaintenance: "Maintenance",
   graphMaintenanceNote: "Legion sedang maintenance. Redeem ditutup sampai Chronicle II dimulai.",
   staffNote: "Triune tidak masuk leaderboard dan tidak memiliki Sigil, grafik Sigil tidak ditampilkan.",
