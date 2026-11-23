@@ -27,7 +27,8 @@ const monthShort = (ms) => new Date(ms).toLocaleDateString("id-ID", { timeZone: 
 
 function seasonLabel(season) {
   const a = parseDay(season.start), b = parseDay(season.end);
-  return `${monthShort(a)}–${monthShort(b)} ${new Date(a).getUTCFullYear()}`;
+  const ya = new Date(a).getUTCFullYear(), yb = new Date(b).getUTCFullYear();
+  return ya === yb ? `${monthShort(a)}–${monthShort(b)} ${ya}` : `${monthShort(a)} ${ya}–${monthShort(b)} ${yb}`;
 }
 
 /* ---------------------------------------------------------- login */
@@ -313,7 +314,7 @@ function niceStep(raw) {
 function graphCard(d) {
   const s = d.season;
   const card = el("section", "card");
-  card.append(el("h2", "sec-title", `${T.graphTitle} · Season ${seasonLabel(s)}`));
+  card.append(el("h2", "sec-title", s.pre_season ? `${T.graphTitle} · ${T.graphPreTitle}` : `${T.graphTitle} · Season ${seasonLabel(s)}`));
 
   const start = parseDay(s.start), activeEnd = parseDay(s.active_end), end = parseDay(s.end);
   const activeDays = dayDiff(start, activeEnd) + 1;
@@ -321,8 +322,8 @@ function graphCard(d) {
   const pts = (d.series || []).map((p) => ({ i: dayDiff(start, parseDay(p.d)), v: p.s, day: parseDay(p.d) }));
   const first = pts[0]?.v ?? 0, last = pts[pts.length - 1]?.v ?? 0;
   card.append(
-    el("p", "sec-sub", s.maintenance ? T.graphMaintenanceNote : `Hari ke-${dayNo} dari ${activeDays}.`),
-    el("p", "sec-sub", `${fmt.format(first)} → ${fmt.format(last)} ${LABELS.points} (${last - first >= 0 ? "+" : ""}${fmt.format(last - first)} di season ini)`)
+    el("p", "sec-sub", s.pre_season ? T.graphPreNote.replace("{n}", fmt.format(s.days_to_start)) : s.maintenance ? T.graphMaintenanceNote : `Hari ke-${dayNo} dari ${activeDays}.`),
+    el("p", "sec-sub", `${fmt.format(first)} → ${fmt.format(last)} ${LABELS.points} (${last - first >= 0 ? "+" : ""}${fmt.format(last - first)} ${s.pre_season ? "di pra-season ini" : "di season ini"})`)
   );
 
   const wrap = el("div", "chart-wrap");
@@ -392,10 +393,13 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   }
 
   // Masa maintenance
-  const mx = x(activeIdx + 0.5);
-  s.append(svg("rect", { x: mx, y: m.t, width: Math.max(0, W - m.r - mx), height: ih, fill: "url(#maint)" }));
-  const cx = (mx + W - m.r) / 2, cy = m.t + ih / 2;
-  s.append(svg("text", { x: cx, y: cy, class: "ch-maint", "text-anchor": "middle", "dominant-baseline": "middle", transform: `rotate(-90 ${cx} ${cy})` }, T.graphMaintenance));
+  const hasMaint = activeIdx < N - 1; // pra-season: tidak ada masa maintenance
+  const mx = hasMaint ? x(activeIdx + 0.5) : W - m.r;
+  if (hasMaint) {
+    s.append(svg("rect", { x: mx, y: m.t, width: Math.max(0, W - m.r - mx), height: ih, fill: "url(#maint)" }));
+    const cx = (mx + W - m.r) / 2, cy = m.t + ih / 2;
+    s.append(svg("text", { x: cx, y: cy, class: "ch-maint", "text-anchor": "middle", "dominant-baseline": "middle", transform: `rotate(-90 ${cx} ${cy})` }, T.graphMaintenance));
+  }
 
   // Batas rank
   for (const r of RANKS) {
