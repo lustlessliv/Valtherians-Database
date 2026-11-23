@@ -389,9 +389,9 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
   for (let k = 0; k < 3; k++) {
     const dt = new Date(start); dt.setUTCMonth(dt.getUTCMonth() + k);
     const i = dayDiff(start, dt.getTime());
+    if (i > N - 1) break;
     s.append(svg("text", { x: Math.min(Math.max(x(i), m.l + 12), W - m.r - 12), y: H - 8, class: "ch-tick", "text-anchor": k === 0 ? "start" : "middle" }, monthShort(dt.getTime())));
   }
-      if (i > N - 1) break;
 
   // Masa maintenance
   const hasMaint = activeIdx < N - 1;
