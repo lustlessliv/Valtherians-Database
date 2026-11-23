@@ -391,9 +391,10 @@ function drawChart(wrap, { pts, start, activeEnd, end }) {
     const i = dayDiff(start, dt.getTime());
     s.append(svg("text", { x: Math.min(Math.max(x(i), m.l + 12), W - m.r - 12), y: H - 8, class: "ch-tick", "text-anchor": k === 0 ? "start" : "middle" }, monthShort(dt.getTime())));
   }
+      if (i > N - 1) break;
 
   // Masa maintenance
-  const hasMaint = activeIdx < N - 1; // pra-season: tidak ada masa maintenance
+  const hasMaint = activeIdx < N - 1;
   const mx = hasMaint ? x(activeIdx + 0.5) : W - m.r;
   if (hasMaint) {
     s.append(svg("rect", { x: mx, y: m.t, width: Math.max(0, W - m.r - mx), height: ih, fill: "url(#maint)" }));
