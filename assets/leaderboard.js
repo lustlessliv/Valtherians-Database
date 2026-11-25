@@ -70,9 +70,11 @@ function renderBoard() {
   }
   for (const p of rows) {
     const li = el("li", "row");
+    const nameCell = el("span", "name", p.name);
+    nameCell.append(el("span", "uid", p.uid));
     li.append(
       el("span", "pos" + (p.pos <= 3 ? ` top${p.pos}` : ""), String(p.pos)),
-      el("span", "name", p.name),
+      nameCell,
       el("span", "score", fmt.format(p.score))
     );
     board.append(li);
