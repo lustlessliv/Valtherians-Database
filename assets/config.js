@@ -86,6 +86,7 @@ export const WELCOME = {
 };
 
 export const TRAINING = {
+  week1Start: "",
   tabs: { register: "Registrasi", resume: "Lanjutkan Training", rename: "Ganti Nama" },
   tabsHint: "Pilih salah satu di atas untuk memulai.",
     steps: ["Buat ID", "Jadwal Training", "Eksplor Legion"],
