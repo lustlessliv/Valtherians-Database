@@ -61,7 +61,8 @@ function weekSelect() {
     sel.setAttribute("aria-label", "Pilih minggu");
     const wrap = el("div", "inline");
     wrap.append(el("span", "muted small-text", "Minggu:"), sel);
-    $("#train-body").closest(".table-wrap").before(wrap);
+    const anchor = $("#train-body").closest(".table-wrap") || $("#train-body").closest("table");
+    anchor.before(wrap);
     sel.addEventListener("change", () => { selectedWeek = Number(sel.value); renderSessions(); });
   }
   return sel;
