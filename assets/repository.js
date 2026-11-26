@@ -167,9 +167,8 @@ function render(d) {
     root.append(uniformCard());
     if (!isAspirant) root.append(scoreCard(d));
   } else {
-    const note = el("section", "card");
-    note.append(el("p", "sec-sub", T.staffNote));
-    root.append(note);
+    root.append(guidedCard(d));
+    if (d.is_arbiter) root.append(menteeCard(d));
     root.append(uniformCard());
   }
 
@@ -205,6 +204,49 @@ function trainingCard(d) {
     const a = el("a", "btn-gold small", T.trainingContinue);
     a.href = new URL("../daftar/?tab=resume", import.meta.url).href;
     card.append(a);
+  }
+  return card;
+}
+
+/* ---------------------------------------------------------- Triune: Training & Aspirants */
+
+function guidedCard(d) {
+  const card = el("section", "card");
+  card.append(el("h2", "sec-title", T.guidedTitle));
+  const list = d.guided || [];
+  if (!list.length) card.append(el("p", "sec-sub", T.guidedEmpty));
+  for (const s of list) {
+    const row = el("div", "session");
+    row.append(el("strong", "", TRAINING.kinds[s.kind] || s.kind), el("div", "session-sub", fmtWhen(s.starts_at) + (s.note ? ` \u2022 ${s.note}` : "")));
+    const who = s.participants || [];
+    row.append(el("div", "guided-label", `${T.guidedParticipants} (${fmt.format(who.length)})`));
+    if (who.length) {
+      const chips = el("div", "pcard-chips");
+      chips.append(...who.map((p) => el("span", "guided-chip", p.name ? `${p.name} \u2022 ${p.uid}` : p.uid)));
+      row.append(chips);
+    } else {
+      row.append(el("div", "session-sub", T.guidedNoParticipants));
+    }
+    card.append(row);
+  }
+  card.append(el("p", "muted small-text", T.guidedNote));
+  return card;
+}
+
+function menteeCard(d) {
+  const card = el("section", "card");
+  card.append(el("h2", "sec-title", T.menteesTitle));
+  const list = d.mentees || [];
+  if (!list.length) card.append(el("p", "sec-sub", T.menteesEmpty));
+  for (const m of list) {
+    const r = rankFor(m.score) || ASPIRANT;
+    const row = el("div", "mentee");
+    row.style.setProperty("--rc", r.color);
+    const top = el("div", "mentee-top");
+    top.append(el("strong", "mentee-name", m.name), el("span", "mentee-rank", r.name || r.short));
+    row.append(top, el("div", "mentee-sub", `${LABELS.id} ${m.uid} \u2022 ${fmt.format(m.score)} ${LABELS.points}`));
+    row.append(el("div", "mentee-sub", `${T.crownedLabel}: ${m.crowned_at ? fmtDayLong(m.crowned_at) : T.notCrowned}`));
+    card.append(row);
   }
   return card;
 }
