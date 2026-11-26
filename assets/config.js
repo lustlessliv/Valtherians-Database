@@ -74,7 +74,7 @@ export const WELCOME = {
   joinTitle: "Bergabung dengan komunitas",
   joinLinks: [
     { label: "WhatsApp", url: "https://chat.whatsapp.com/CIvyrn2EtIfBMOKtJklldc?s=cl&p=a&iam=2" },
-    { label: "Discord", url: "#" },
+    { label: "Discord", url: "https://discord.gg/tYBkJMvXK" },
   ],
   infoTitle: "Informasi Legion",
   infoLinks: [
