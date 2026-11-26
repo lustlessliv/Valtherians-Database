@@ -17,6 +17,7 @@ const fmtWhen = (iso) =>
   new Date(iso).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" }) + " WIB";
 
 let staff = [];
+let pendingWhen = null;
 
 function fillSelect(sel, rows, placeholder) {
   const keep = sel.value;
@@ -26,25 +27,82 @@ function fillSelect(sel, rows, placeholder) {
   if ([...sel.options].some((o) => o.value === keep)) sel.value = keep;
 }
 
-async function load() {
-  const [st, se] = await Promise.all([
-    sb.from("staff").select("uid,name,role,division,active").eq("active", true).order("name"),
-    sb.from("training_sessions").select("id,kind,trainer_uid,starts_at,note,training_signups(uid,score)")
-      .order("starts_at", { ascending: false }).limit(80),
-  ]);
-  if (st.error || se.error) {
-    $("#train-note").textContent = "Tabel Training belum ada. Jalankan supabase-training.sql dulu.";
-    return;
-  }
-  staff = st.data;
-  fillSelect($("#train-trainer"), staff, "Pilih Triune");
-  fillSelect($("#arb-select"), staff.filter((s) => s.division === "Arbiter" || s.role === "Marshal"), "Pilih Arbiter");
+  names = new Map(staff.map((s) => [s.uid, s.name]));
+  sessions = se.data;
+  buildWeeks();
+  renderSessions();
+}
 
-  const names = new Map(staff.map((s) => [s.uid, s.name]));
+/* ---------------------------------------------------------- jadwal per minggu (Senin–Minggu, WIB) */
+
+let sessions = [];
+let names = new Map();
+let selectedWeek = null;
+let weeksList = [];
+
+const DAY = 86400000;
+const wibDay = (ms) => Math.floor((ms + 7 * 3600000) / DAY);
+const mondayOf = (day) => day - ((day + 3) % 7);
+const fmtDayMonth = (day) => new Date(day * DAY).toLocaleDateString("id-ID", { timeZone: "UTC", day: "numeric", month: "short" });
+
+function week1Day() {
+  const set = TRAINING.week1Start && Date.parse(`${TRAINING.week1Start}T00:00:00Z`);
+  if (set) return mondayOf(Math.floor(set / DAY));
+  const first = sessions.length ? Math.min(...sessions.map((x) => Date.parse(x.starts_at))) : Date.now();
+  return mondayOf(wibDay(first));
+}
+const weekOf = (iso, w1) => (mondayOf(wibDay(Date.parse(iso))) - w1) / 7 + 1;
+
+function weekSelect() {
+  let sel = $("#train-week");
+  if (!sel) {
+    sel = el("select");
+    sel.id = "train-week";
+    sel.setAttribute("aria-label", "Pilih minggu");
+    const wrap = el("div", "inline");
+    wrap.append(el("span", "muted small-text", "Minggu:"), sel);
+    $("#train-body").closest(".table-wrap").before(wrap);
+    sel.addEventListener("change", () => { selectedWeek = Number(sel.value); renderSessions(); });
+  }
+  return sel;
+}
+
+function buildWeeks() {
+  const w1 = week1Day();
+  const nowW = weekOf(new Date().toISOString(), w1);
+  const nums = sessions.map((x) => weekOf(x.starts_at, w1)).concat(nowW);
+  const lo = Math.min(...nums), hi = Math.max(...nums);
+  weeksList = [];
+  for (let n = lo; n <= hi; n++) {
+    const start = w1 + (n - 1) * 7;
+    const count = sessions.filter((x) => weekOf(x.starts_at, w1) === n).length;
+    weeksList.push({ n, start, count });
+  }
+  if (selectedWeek === null || !weeksList.some((w) => w.n === selectedWeek)) {
+    selectedWeek = weeksList.some((w) => w.n === nowW) ? nowW : hi;
+  }
+  if (pendingWhen) {
+    const pw = weekOf(pendingWhen, w1);
+    pendingWhen = null;
+    if (weeksList.some((w) => w.n === pw)) selectedWeek = pw;
+  }
+  const sel = weekSelect();
+  sel.replaceChildren(...weeksList.map((w) => {
+    const label = w.n < 1 ? `Sebelum Minggu 1 (${fmtDayMonth(w.start)})` : `Minggu ${w.n}`;
+    return new Option(`${label} \u2022 ${fmtDayMonth(w.start)}\u2013${fmtDayMonth(w.start + 6)} \u2022 ${w.count} sesi`, String(w.n));
+  }));
+  sel.value = String(selectedWeek);
+}
+
+function renderSessions() {
+  const w1 = week1Day();
+  const rows = sessions
+    .filter((x) => weekOf(x.starts_at, w1) === selectedWeek)
+    .sort((x, y) => new Date(x.starts_at) - new Date(y.starts_at));
   const body = $("#train-body");
   body.replaceChildren();
   const now = Date.now();
-  for (const s of se.data) {
+  for (const s of rows) {
     const signups = s.training_signups || [];
     const people = signups.map((x) => x.uid);
     const tr = el("tr");
@@ -80,8 +138,8 @@ async function load() {
     );
     body.append(tr);
   }
-  $("#train-note").textContent = se.data.length ? "Sesi yang sudah lewat tampil redup." : "Belum ada sesi.";
-}
+  $("#train-note").textContent = rows.length ? "Sesi yang sudah lewat tampil redup." : "Belum ada sesi di minggu ini.";
+    }
 
 
 async function openScores(session, signups) {
@@ -137,6 +195,8 @@ $("#train-form").addEventListener("submit", async (ev) => {
   });
   if (error) return toast(error.message, true);
   $("#train-text").value = "";
+  selectedWeek = null;
+  pendingWhen = new Date(`${when}:00+07:00`).toISOString();
   toast("Sesi ditambahkan.");
   logAction("training", `Tambah sesi ${TRAINING.kinds[kind] || kind} (${when.replace("T", " ")} WIB)`);
   load();
