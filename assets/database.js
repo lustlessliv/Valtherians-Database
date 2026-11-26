@@ -47,7 +47,12 @@ function renderTriune(staff, error) {
     box.append(el("p", "stats-note", "Belum ada Triune yang terdata."));
     return;
   }
-  for (const s of staff) box.append(staffCard(s));
+    let prev = null;
+  for (const s of staff) {
+    if (prev && prev !== s.role) box.append(el("hr", "staff-divider"));
+    box.append(staffCard(s));
+    prev = s.role;
+  }
 }
 
 /* ---------------------------------------------------------- Total & statistik member */
