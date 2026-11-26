@@ -27,12 +27,6 @@ function fillSelect(sel, rows, placeholder) {
   if ([...sel.options].some((o) => o.value === keep)) sel.value = keep;
 }
 
-  names = new Map(staff.map((s) => [s.uid, s.name]));
-  sessions = se.data;
-  buildWeeks();
-  renderSessions();
-}
-
 async function load() {
   const [st, se] = await Promise.all([
     sb.from("staff").select("uid,name,role,division,active").eq("active", true).order("name"),
@@ -43,10 +37,15 @@ async function load() {
     $("#train-note").textContent = "Tabel Training belum ada. Jalankan supabase-training.sql dulu.";
     return;
   }
-
   staff = st.data;
   fillSelect($("#train-trainer"), staff, "Pilih Triune");
   fillSelect($("#arb-select"), staff.filter((s) => s.division === "Arbiter" || s.role === "Marshal"), "Pilih Arbiter");
+
+  names = new Map(staff.map((s) => [s.uid, s.name]));
+  sessions = se.data;
+  buildWeeks();
+  renderSessions();
+}
 
 /* ---------------------------------------------------------- jadwal per minggu (Senin–Minggu, WIB) */
 
