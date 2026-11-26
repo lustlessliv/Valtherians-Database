@@ -311,3 +311,13 @@
 
 .uniform.off .uniform-pic:has(img) { background: #101a3d; }
 .row .name .uid { display: block; margin-top: 2px; font-size: .75rem; font-weight: 400; color: var(--muted); letter-spacing: .04em; }
+
+.staff-divider { grid-column: 1 / -1; width: 100%; height: 0; margin: 6px 0; border: 0; border-top: 1px solid var(--border); }
+
+.guided-label { margin-top: 8px; color: var(--muted); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+.guided-chip { padding: 3px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel); font-size: .8rem; }
+.mentee { margin-bottom: 8px; padding: 10px 12px; border: 1px solid var(--border); border-left: 3px solid var(--rc, var(--border)); border-radius: 8px; background: var(--panel-2); }
+.mentee:last-child { margin-bottom: 0; }
+.mentee-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 10px; }
+.mentee-rank { color: var(--rc, var(--muted)); font-family: Cinzel, serif; font-size: .85rem; font-weight: 700; }
+.mentee-sub { margin-top: 2px; color: var(--muted); font-size: .82rem; }
