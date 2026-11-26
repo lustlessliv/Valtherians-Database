@@ -126,6 +126,14 @@ function renderStats() {
 
 /* ---------------------------------------------------------- tabel member */
 
+const idSeq = (uid) => (/^\d{5,}$/.test(uid) ? parseInt(uid.slice(4), 10) : Infinity);
+const testSeq = (uid) => { const m = uid.match(/(\d+)$/); return m ? parseInt(m[1], 10) : Infinity; };
+function byIdOrder(a, b) {
+  return (a.is_test ? 1 : 0) - (b.is_test ? 1 : 0)
+    || (a.is_test ? testSeq(a.uid) - testSeq(b.uid) : idSeq(a.uid) - idSeq(b.uid))
+    || a.uid.localeCompare(b.uid);
+}
+
 function renderPlayers() {
   const q = search.trim().toLowerCase();
   let rows = players
@@ -136,7 +144,7 @@ function renderPlayers() {
       if (rankFilter !== "all") return r?.id === rankFilter;
       return true;
     })
-    .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+        .sort(byIdOrder);
   const matched = rows.length;
   const pages = Math.max(1, Math.ceil(matched / PAGE_SIZE));
   page = Math.min(Math.max(1, page), pages);
